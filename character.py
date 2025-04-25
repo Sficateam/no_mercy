@@ -25,7 +25,7 @@ class Player(Character, pygame.sprite.Sprite):
     def __init__(self, x, y, speed):
         Character.__init__(self, x, y, speed)
         pygame.sprite.Sprite.__init__(self)
-        self.img = pygame.image.load(f'assets/character/').convert_alpha()
+        self.img = pygame.image.load(f'assets/character/melon.png').convert_alpha()
         self.direction = pygame.Vector2(0, 0)
         self.flip = False
         self.rect = self.img.get_rect()

@@ -1,5 +1,5 @@
 import pygame
-#import character
+import character
 from world import World
 import constants
 from game import Game
@@ -35,17 +35,17 @@ while running:
 		game.surface.fill((110,190,66))
 
     
-		#screen_scroll = game.hero.update(keys, game.world.obstacles, events)
+		screen_scroll = game.hero.update(keys, game.world.obstacles, events)
 		game.world.update(game.screen_scroll)
-		#game.npc.update(game.world.obstacles, game.hero, screen_scroll)
+		game.npc.update(game.world.obstacles, game.hero, screen_scroll)
 
 		game.world.draw(game.surface)
 
-		#game.hero.draw(game.surface)
-		#game.npc.draw(game.surface)
+		game.hero.draw(game.surface)
+		game.npc.draw(game.surface)
 
-		#if game.hero.is_dead():
-		#	game_state = 'game_over'
+		if game.hero.is_dead():
+			game_state = 'game_over'
 		
 
 	elif game_state == 'game_over':

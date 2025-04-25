@@ -1,5 +1,5 @@
 import pygame
-#import character
+import character
 from world import World
 import constants
 
@@ -13,8 +13,8 @@ class Game():
 
     def setup(self):
 
-        #self.hero = character.Player()
-        #self.npc = character.Npc()
+        self.hero = character.Player(200, 200, 5)
+        self.npc = character.Npc()
 
         self.world = World()
         self.world.process_data()
