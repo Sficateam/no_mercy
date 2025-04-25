@@ -35,7 +35,7 @@ while running:
 		game.surface.fill((110,190,66))
 
     
-		screen_scroll = game.hero.update(keys, game.world.obstacles, events, game.npc)
+		screen_scroll = game.hero.update(keys, game.world.obstacles, events, game.npc_group)
 		game.world.update(screen_scroll)
 		#game.npc.update(game.world.obstacles, game.hero, screen_scroll)
 		game.world.draw(game.surface)
