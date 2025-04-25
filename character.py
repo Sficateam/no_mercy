@@ -29,6 +29,7 @@ class Player(Character, pygame.sprite.Sprite):
         self.y = y
         self.img = pygame.image.load(f'assets/character/melon.png').convert_alpha()
         self.direction = pygame.Vector2(0, 0)
+        self.attacking = False
         self.flip = False
         self.rect = self.img.get_rect()
         self.rect.center = (x, y)
@@ -69,7 +70,7 @@ class Player(Character, pygame.sprite.Sprite):
 
         return temp
     
-    def move(self, obstacle_list, npc):
+    def move(self, obstacle_list, npc_group):
         screen_scroll = [0, 0]
 
         if self.direction.length_squared() > 0:
@@ -85,12 +86,13 @@ class Player(Character, pygame.sprite.Sprite):
                 elif self.direction.x < 0:
                     self.rect.left = tile.right - 40
                 self.x = self.rect.centerx
-        if self.rect.colliderect(npc):
-            if self.direction.x > 0:
-                self.rect.right = npc.rect.left
-            elif self.direction.x < 0:
-                self.rect.left = npc.rect.right
-            self.x = self.rect.centerx
+        for npc in npc_group:
+            if self.rect.colliderect(npc):
+                if self.direction.x > 0:
+                    self.rect.right = npc.rect.left
+                elif self.direction.x < 0:
+                    self.rect.left = npc.rect.right
+                self.x = self.rect.centerx
 
         # Move in y direction
         self.y += self.direction.y * self.speed
@@ -102,13 +104,14 @@ class Player(Character, pygame.sprite.Sprite):
                 elif self.direction.y < 0:
                     self.rect.top = tile.bottom
                 self.y = self.rect.centery
-        if self.in_collision(npc):
-            if self.direction.y > 0:
-                self.rect.bottom = npc.rect.top
-            elif self.direction.y < 0:
-                self.rect.top = npc.rect.bottom
-            self.y = self.rect.centery
-        
+        for npc in npc_group:
+            if self.in_collision(npc):
+                if self.direction.y > 0:
+                    self.rect.bottom = npc.rect.top
+                elif self.direction.y < 0:
+                    self.rect.top = npc.rect.bottom
+                self.y = self.rect.centery
+            
         #update scroll based on player position
         #move camera left and right
         if self.direction.length_squared() > 0:
@@ -136,11 +139,14 @@ class Player(Character, pygame.sprite.Sprite):
             self.input_event(event)
 
         new_scroll = None
-
+        print(self.attacking)
 
         if new_scroll:
             return new_scroll
         return self.move(obstacle_list, npc)
+    
+    def attack(self, npc):
+        pass
 
 
 
