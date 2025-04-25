@@ -31,21 +31,21 @@ while running:
 		keys = pygame.key.get_pressed() 
 		
 		game.screen.fill((80,145,166))
-		game.screen.blit(game.surface, (constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT))
+		game.screen.blit(game.surface, (0, 0))
 		game.surface.fill((110,190,66))
 
     
 		screen_scroll = game.hero.update(keys, game.world.obstacles, events)
 		game.world.update(game.screen_scroll)
-		game.npc.update(game.world.obstacles, game.hero, screen_scroll)
+		#game.npc.update(game.world.obstacles, game.hero, screen_scroll)
 
 		game.world.draw(game.surface)
 
 		game.hero.draw(game.surface)
 		game.npc.draw(game.surface)
 
-		if game.hero.is_dead():
-			game_state = 'game_over'
+		# if game.hero.is_dead():
+		# 	game_state = 'game_over'
 		
 
 	elif game_state == 'game_over':

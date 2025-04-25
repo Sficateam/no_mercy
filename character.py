@@ -50,13 +50,13 @@ class Player(Character, pygame.sprite.Sprite):
         if keys[pygame.K_w]:
                 self.direction.y = -1
 
-    # def input_event(self, event):
-    #     if event.type == pygame.KEYDOWN:
-    #         if event.key == pygame.K_SPACE:
-    #             self.attacking = True
-    #     if event.type == pygame.KEYUP:
-    #         if event.key == pygame.K_SPACE:
-    #             self.attacking = False
+    def input_event(self, event):
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                self.attacking = True
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_SPACE:
+                self.attacking = False
 
     def in_collision(self, object):
         self.rect.x += 40
@@ -98,7 +98,7 @@ class Player(Character, pygame.sprite.Sprite):
         #update scroll based on player position
         #move camera left and right
         if self.direction.length_squared() > 0:
-            if self.rect.right > (constants.SCREEN_WIDTH_HALF - constants.SCROLL_THRESH):
+            if self.rect.right > (constants.SCREEN_WIDTH - constants.SCROLL_THRESH):
                 screen_scroll[0] = -self.speed
                 self.x -= self.speed
             if self.rect.left < constants.SCROLL_THRESH:
@@ -115,17 +115,13 @@ class Player(Character, pygame.sprite.Sprite):
                     
         return screen_scroll
     
-    def update(self, keys, obstacle_list, item_list, events):
+    def update(self, keys, obstacle_list, events):
         self.input_keys(keys)
 
         for event in events:
             self.input_event(event)
 
         new_scroll = None
-    
-        for item in item_list:
-            if self.in_collision(item):
-                new_scroll = item.do_magic(self)
 
 
         if new_scroll:
@@ -138,7 +134,7 @@ class Npc(Character, pygame.sprite.Sprite):
     def __init__(self, x, y, speed):
         Character.__init__(self, x, y, speed)
         pygame.sprite.Sprite.__init__(self)
-        self.img = pygame.image.load(f'assets/character/bezpaternik.png').convert_alpha()
+        self.img = pygame.image.load(f'assets/character/melon.png').convert_alpha()
         self.flip = False
         self.direction = pygame.Vector2(0, 0)
         self.rect = self.img.get_rect()
