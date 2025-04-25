@@ -38,12 +38,15 @@ while running:
 		screen_scroll = game.hero.update(keys, game.world.obstacles, events, game.npc)
 		game.world.update(screen_scroll)
 		#game.npc.update(game.world.obstacles, game.hero, screen_scroll)
-		game.npc.move(game.world.obstacles,screen_scroll)
-
 		game.world.draw(game.surface)
 
+		for npc in game.npc_group:
+			npc.move(game.world.obstacles,screen_scroll)
+			npc.draw(game.surface)
+
+
 		game.hero.draw(game.surface)
-		game.npc.draw(game.surface)
+		
 
 		# if game.hero.is_dead():
 		# 	game_state = 'game_over'

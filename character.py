@@ -4,9 +4,8 @@ import constants
 import random
 
 class Character(ABC):
-    def __init__(self, x, y, speed):
-        self.x = x
-        self.y = y
+    def __init__(self, speed):
+
         self.speed = speed
 
     @abstractmethod
@@ -24,8 +23,10 @@ class Character(ABC):
 
 class Player(Character, pygame.sprite.Sprite):
     def __init__(self, x, y, speed):
-        Character.__init__(self, x, y, speed)
+        Character.__init__(self, speed)
         pygame.sprite.Sprite.__init__(self)
+        self.x = x
+        self.y = y
         self.img = pygame.image.load(f'assets/character/melon.png').convert_alpha()
         self.direction = pygame.Vector2(0, 0)
         self.flip = False
@@ -144,14 +145,15 @@ class Player(Character, pygame.sprite.Sprite):
 
 
 class Npc(Character, pygame.sprite.Sprite):
-    def __init__(self, x, y, speed):
-        Character.__init__(self, x, y, speed)
+    def __init__(self, speed, position_list):
+        Character.__init__(self, speed)
         pygame.sprite.Sprite.__init__(self)
         self.img = pygame.image.load(f'assets/character/jaymeng.png').convert_alpha()
         self.flip = False
         self.direction = pygame.Vector2(0, 0)
-        self.rect = self.img.get_rect()
-        self.rect.center = (x, y)
+        self.rect = self.get_random_rect(position_list)
+        self.x = self.rect.x
+        self.y = self.rect.y
         self.movement = True
         self.last = pygame.time.get_ticks()
 
@@ -228,3 +230,11 @@ class Npc(Character, pygame.sprite.Sprite):
 
     def update(self):
         pass
+
+    def get_postion(self, position_list):
+        i = random.randint(0, len(position_list) - 1)
+        return position_list[i]
+    
+    def get_random_rect(self, position_list):
+        index = random.randint(0, len(position_list) - 1)
+        return position_list[index].copy()

@@ -13,10 +13,15 @@ class Game():
 
     def setup(self):
 
-        self.hero = character.Player(200, 200, 4)
-        self.npc = character.Npc(250, 250, 2)
-
         self.world = World()
-        self.world.process_data()
+        self.world.process_data()        
+
+        self.hero = character.Player(200, 200, 4)
+
+        self.npc_group = pygame.sprite.Group()
+        for i in range(5):
+            npc = character.Npc(2, self.world.positions)
+            self.npc_group.add(npc)
+
 
         self.screen_scroll = [0, 0]
