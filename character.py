@@ -1,6 +1,7 @@
 import pygame
 from abc import ABC, abstractmethod
 import constants
+import random
 
 class Character(ABC):
     def __init__(self, x, y, speed):
@@ -146,18 +147,84 @@ class Npc(Character, pygame.sprite.Sprite):
     def __init__(self, x, y, speed):
         Character.__init__(self, x, y, speed)
         pygame.sprite.Sprite.__init__(self)
-        self.img = pygame.image.load(f'assets/character/melon.png').convert_alpha()
+        self.img = pygame.image.load(f'assets/character/jaymeng.png').convert_alpha()
         self.flip = False
         self.direction = pygame.Vector2(0, 0)
         self.rect = self.img.get_rect()
         self.rect.center = (x, y)
+        self.movement = True
+        self.last = pygame.time.get_ticks()
+
+    def in_collision(self, object):
+        self.rect.x += 40
+        self.rect.width -= 80
+        temp = self.rect.colliderect(object)
+        self.rect.x -= 40
+        self.rect.width += 80
+
+        return temp
 
     def draw(self, screen):
         screen.blit(pygame.transform.flip(self.img, self.flip, False), self.rect)
         pygame.draw.rect(screen, (255, 0, 0), self.rect, 2)
 
-    def move(self):
-        pass
+    def move(self, obstacle_list, screen_scroll):
+        self.now = pygame.time.get_ticks()
+        random_move_list = [0, 0, 0, 0]
+        
+        if self.now - self.last > 1000:
+            self.last = pygame.time.get_ticks()
+
+            random_cooldown = random.randint(0, 60)
+            random_move = random.randint(0,1)
+            if random_move == 0:
+                self.movement = True
+            else:
+                self.movement = False
+
+            
+            for i in range(4):
+                random_move_list[i] = random.randint(0,1)
+
+
+        if self.move:
+            
+            if random_move_list[0] == 1:
+                    self.direction.x = -1
+                    self.flip = False
+            if random_move_list[1] == 1:
+                    self.direction.x = 1
+                    self.flip = True
+            if random_move_list[2] == 1:
+                    self.direction.y = 1
+            if random_move_list[3] == 1:
+                    self.direction.y = -1
+        self.x += self.direction.x * self.speed
+        self.x += screen_scroll[0]
+        self.rect.centerx = int(self.x)
+        for tile in obstacle_list:
+            if self.rect.colliderect(tile):
+                if self.direction.x > 0:
+                    self.rect.right = tile.left
+                elif self.direction.x < 0:
+                    self.rect.left = tile.right
+                self.x = self.rect.centerx
+
+
+        # Move in y direction
+        self.y += self.direction.y * self.speed
+        self.y += screen_scroll[1]
+        self.rect.centery = int(self.y)
+        for tile in obstacle_list:
+            if self.rect.colliderect(tile):
+                if self.direction.y > 0:
+                    self.rect.bottom = tile.top
+                elif self.direction.y < 0:
+                    self.rect.top = tile.bottom
+                self.y = self.rect.centery
+
+        if self.direction.length_squared() > 0:
+            self.direction = self.direction.normalize()
 
     def update(self):
         pass

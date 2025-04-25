@@ -14,7 +14,7 @@ class Game():
     def setup(self):
 
         self.hero = character.Player(200, 200, 4)
-        self.npc = character.Npc(250, 250, 3)
+        self.npc = character.Npc(250, 250, 2)
 
         self.world = World()
         self.world.process_data()
