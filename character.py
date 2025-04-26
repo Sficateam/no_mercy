@@ -162,8 +162,8 @@ class Npc(Character, pygame.sprite.Sprite):
         self.y = self.rect.y
         self.movement = True
         self.infected = self.get_virus()
-        self.last = pygame.time.get_ticks()
-        #self.animation = self.get_animation()
+        self.last_move = pygame.time.get_ticks()
+        self.last_animation = pygame.time.get_ticks()
 
     def in_collision(self, object):
         self.rect.x += 40
@@ -182,8 +182,8 @@ class Npc(Character, pygame.sprite.Sprite):
         self.now = pygame.time.get_ticks()
         random_move_list = [0, 0, 0, 0]
         
-        if self.now - self.last > random.randint(500, 5000):
-            self.last = pygame.time.get_ticks()
+        if self.now - self.last_move > random.randint(500, 5000):
+            self.last_move = pygame.time.get_ticks()
 
             random_move = random.randint(0,1)
             if random_move == 0:
@@ -257,5 +257,27 @@ class Npc(Character, pygame.sprite.Sprite):
             return True
         else:
             return False
+        
+    def get_animation(self):
+        self.now = pygame.time.get_ticks()
+        if self.now - self.last_move > random.randint(500, 5000):
+            self.last_move = pygame.time.get_ticks()
+
+            if self.infected:
+            
+
+
+
+
+    #handle animation
+    #update image
+    self.image = self.animation_list[self.action][self.frame_index]
+    #check if enough time has passed since the last update
+    if pygame.time.get_ticks() - self.update_time > animation_cooldown:
+      self.frame_index += 1
+      self.update_time = pygame.time.get_ticks()
+    #check if the animation has finished
+    if self.frame_index >= len(self.animation_list[self.action]):
+      self.frame_index = 0
             
         
