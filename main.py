@@ -41,7 +41,7 @@ while running:
 		game.world.draw(game.surface)
 
 		for npc in game.npc_group:
-			npc.move(game.world.obstacles,screen_scroll)
+			npc.move(game.world.obstacles, screen_scroll)
 			npc.draw(game.surface)
 
 
