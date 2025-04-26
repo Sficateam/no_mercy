@@ -4,7 +4,7 @@ import pytmx
 
 class World():
     def __init__(self):
-        self.map_tmx = pytmx.load_pygame(f'assets/world/mapka2.tmx')
+        self.map_tmx = pytmx.load_pygame(f'assets/world/mapa.tmx')
         self.tile_images = []        
         self.obstacles = []
         self.positions = []

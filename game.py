@@ -16,7 +16,7 @@ class Game():
         self.world = World()
         self.world.process_data()        
 
-        self.hero = character.Player(200, 200, 4)
+        self.hero = character.Player(300, 300, 4)
 
         self.npc_group = pygame.sprite.Group()
         self.num_of_infected = 0
