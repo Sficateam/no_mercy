@@ -295,21 +295,22 @@ class Npc(Character, pygame.sprite.Sprite):
         
     def get_animation(self):
         self.now = pygame.time.get_ticks()
+        if self.now - self.last_animation > 5000:
         # Použijte samostatný časovač pro animaci
-        if self.now - self.last_frame > 1000:  # Nastavte cooldown animace (např. 200 ms)
-            self.last_frame = self.now
-            if self.infected:
-                # Cyklická změna snímků animace
-                j = random.randint(0, 1)
-                if j == 0:
-                    i = random.randint(0, len(self.animation_list[0]) - 1)
-                    self.img = self.animation_list[0][i]
+            if self.now - self.last_frame > 200:  # Nastavte cooldown animace (např. 200 ms)
+                self.last_frame = self.now
+                if self.infected:
+                    # Cyklická změna snímků animace
+                    j = random.randint(0, 1)
+                    if j == 0:
+                        i = random.randint(0, len(self.animation_list[0]) - 1)
+                        self.img = self.animation_list[0][i]
+                    else:
+                        i = random.randint(0, len(self.animation_list[1]) - 1)
+                        self.img = self.animation_list[1][i]
                 else:
                     i = random.randint(0, len(self.animation_list[1]) - 1)
                     self.img = self.animation_list[1][i]
-            else:
-                i = random.randint(0, len(self.animation_list[1]) - 1)
-                self.img = self.animation_list[1][i]
 
             
 
