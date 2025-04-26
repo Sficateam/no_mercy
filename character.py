@@ -2,6 +2,7 @@ import pygame
 from abc import ABC, abstractmethod
 import constants
 import random
+import os
 
 class Character(ABC):
     def __init__(self, speed):
@@ -28,6 +29,18 @@ class Character(ABC):
         self.bigger_rect.width += 80
 
         return temp
+    
+    def animation_load(self, list, path):
+        i = 1
+        while True:
+            filename = f'{path}{i}.png'
+            if os.path.exists(filename):
+                img = pygame.image.load(filename).convert_alpha()
+                list.append(img)
+                i += 1
+            else:
+                break
+        return list
 
 
 class Player(Character, pygame.sprite.Sprite):
@@ -42,45 +55,12 @@ class Player(Character, pygame.sprite.Sprite):
         self.flip = False
         self.rect = self.img.get_rect()
         self.rect.center = (x, y)
-        self.idle = self.animation_load_iddle()
-        self.walk = self.animation_load_walk()
-        self.fight = self.animation_load_fight()
+        self.idle = self.animation_load([], path = 'assets/character/idle/wiggling')
+        self.walk = self.animation_load([], path = 'assets/character/walk/Walking')
+        self.fight = self.animation_load([], path = 'assets/character/attack/Killing2-export')
         self.last_animation = pygame.time.get_ticks()
         self.frame = 0
         self.walking = False
-
-    def animation_load_iddle(self):
-        idle = []
-
-        for i in range(16):
-            img = pygame.image.load(f'assets/character/idle/wiggling{i + 1}.png').convert_alpha()
-            idle.append(img)
-
-            print("iddle " + str(idle))
-
-        return idle
-    
-    def animation_load_walk(self):
-        walk = []
-
-        for i in range(6):
-            img = pygame.image.load(f'assets/character/walk/Walking{i + 1}.png').convert_alpha()
-            walk.append(img)
-
-            print("walk " + str(walk))
-
-        return walk
-
-    def animation_load_fight(self):
-        fight = []
-
-        for i in range(4):
-            img = pygame.image.load(f'assets/character/attack/Killing2-export{i + 1}.png').convert_alpha()
-            fight.append(img)
-
-            print("attack " + str(fight))
-
-        return fight
 
     def draw(self, screen):
         screen.blit(pygame.transform.flip(self.img, self.flip, False), self.rect)
@@ -135,10 +115,6 @@ class Player(Character, pygame.sprite.Sprite):
                 self.x = prev_x
                 self.rect.centerx = int(self.x)
 
-        for npc in npc_group:
-            if self.in_collision(npc):
-                self.x = prev_x
-                self.rect.centerx = int(self.x)
 
         self.y += self.direction.y * self.speed
         self.rect.centery = int(self.y)
@@ -180,10 +156,10 @@ class Player(Character, pygame.sprite.Sprite):
                     self.frame = 0
                 self.img = self.fight[self.frame]
                 self.frame += 1
-    
+
         if self.walking:
-            if now - self.last_animation > 150:
-                self.last_animation = pygame.time.get_ticks()   
+            if now - self.last_animation > 150:    
+                self.last_animation = pygame.time.get_ticks()
                 if self.frame >= len(self.walk):
                     self.frame = 0
                 self.img = self.walk[self.frame]
@@ -191,7 +167,7 @@ class Player(Character, pygame.sprite.Sprite):
 
         else:
             if now - self.last_animation > 150:
-                self.last_animation = pygame.time.get_ticks() 
+                self.last_animation = pygame.time.get_ticks()
                 if self.frame >= len(self.idle):
                     self.frame = 0
                 self.img = self.idle[self.frame]
@@ -234,8 +210,9 @@ class Npc(Character, pygame.sprite.Sprite):
     def __init__(self, speed, position_list):
         Character.__init__(self, speed)
         pygame.sprite.Sprite.__init__(self)
-        self.img = pygame.image.load(f'assets/character/jaymeng.png').convert_alpha()
+        self.img = pygame.image.load(f'assets/character/npc/1/Walking1.png').convert_alpha()
         self.img_death = pygame.image.load(f'assets/world/shroom1.png').convert_alpha()
+        self.walk = self.animation_load([], path = 'assets/character/npc/1/Walking')
         self.flip = False
         self.direction = pygame.Vector2(0, 0)
         self.rect = self.get_random_rect(position_list)
@@ -252,7 +229,8 @@ class Npc(Character, pygame.sprite.Sprite):
         self.last_animation = pygame.time.get_ticks()
         self.animation_list = self.load_animation_list()
         self.animation_unfinished = False
-        self.random_cooldown = random.randint(2000, 10000)
+        self.random_cooldown = random.randint(3000, 7000)
+        self.actual_list = self.animation_list[0]
 
 
     def draw(self, screen):
@@ -279,15 +257,17 @@ class Npc(Character, pygame.sprite.Sprite):
             for i in range(4):
                 random_move_list[i] = random.randint(0,1)
 
-
         if self.movement:
+
+            prev_x = self.x
+            prev_y = self.y
             
             if random_move_list[0] == 1:
                     self.direction.x = -1
-                    self.flip = False
+                    self.flip = True
             if random_move_list[1] == 1:
                     self.direction.x = 1
-                    self.flip = True
+                    self.flip = False
             if random_move_list[2] == 1:
                     self.direction.y = 1
             if random_move_list[3] == 1:
@@ -300,10 +280,11 @@ class Npc(Character, pygame.sprite.Sprite):
             for tile in obstacle_list:
                 if self.bigger_rect.colliderect(tile):
                     if self.direction.x > 0:
-                        self.bigger_rect.right = tile.left
+                        self.x = prev_x
+                        self.rect.centerx = int(self.x)
                     elif self.direction.x < 0:
-                        self.bigger_rect.left = tile.right
-                    self.x = self.bigger_rect.centerx
+                        self.x = prev_x
+                        self.rect.centerx = int(self.x)
 
 
             # Move in y direction
@@ -313,10 +294,11 @@ class Npc(Character, pygame.sprite.Sprite):
             for tile in obstacle_list:
                 if self.bigger_rect.colliderect(tile):
                     if self.direction.y > 0:
-                        self.bigger_rect.bottom = tile.top
+                        self.y = prev_y
+                        self.rect.centery = int(self.y)
                     elif self.direction.y < 0:
-                        self.bigger_rect.top = tile.bottom
-                    self.y = self.bigger_rect.centery
+                        self.y = prev_y
+                        self.rect.centery = int(self.y)
 
             if self.direction.length_squared() > 0:
                 self.direction = self.direction.normalize()
@@ -328,6 +310,15 @@ class Npc(Character, pygame.sprite.Sprite):
             self.bigger_rect.centery = int(self.y)
 
     def update(self):
+        self.get_animation()
+        now = pygame.time.get_ticks()
+        if self.movement:
+            if now - self.last_animation > 150:    
+                self.last_animation = pygame.time.get_ticks()
+                if self.frame >= len(self.walk):
+                    self.frame = 0
+                self.img = self.walk[self.frame]
+                self.frame += 1
         if self.is_dead:
             self.kill()
 
@@ -340,7 +331,7 @@ class Npc(Character, pygame.sprite.Sprite):
         return position_list[index].copy()
     
     def get_virus(self):
-        i = random.randint(0,1)
+        i = random.randint(0, 1)
         if i == 0:
             return True
         else:
@@ -348,14 +339,31 @@ class Npc(Character, pygame.sprite.Sprite):
         
     def load_animation_list(self):
         infected = []
-        faked = []
-        for i in range(2):
-            for j in range(2):
-                faked.append(pygame.image.load(f'assets/character/faked/{j}/jaymeng{i}.png').convert_alpha())
-                infected.append(pygame.image.load(f'assets/character/infected/{j}/jaymeng{i}.png').convert_alpha())
+        healthy = []
         animation_list = []
+
+        folders_healthy = 0
+        folders_infected = 0
+
+        for entry in os.scandir('assets/character/npc/1/healthy'):
+            if entry.is_dir():
+                folders_healthy += 1
+        
+        for entry in os.scandir('assets/character/npc/1/infected'):
+            if entry.is_dir():
+                folders_infected += 1
+
+        for i in range(folders_healthy):
+            list = self.animation_load([], f'assets/character/npc/1/healthy/{i+1}/')
+            healthy.append(list)
+
+
+        for i in range(folders_infected):
+            list = self.animation_load([], f'assets/character/npc/1/infected/{i+1}/')
+            infected.append(list)
+
         animation_list.append(infected)
-        animation_list.append(faked)
+        animation_list.append(healthy)
 
         return animation_list
 
@@ -363,27 +371,41 @@ class Npc(Character, pygame.sprite.Sprite):
     def get_animation(self):
         self.now = pygame.time.get_ticks()
 
+        # if not self.animation_unfinished and self.now - self.last_animation > self.random_cooldown:
+        #     self.last_animation = self.now
+        #     self.last_frame = self.now
+        #     self.animation_unfinished = True
+        #     self.frame = 0
+
+        #     if self.infected:
+        #         self.actual_list = self.animation_list[0][random.randint(0, len(self.animation_list[0]) - 1)]
+        #     else:
+        #         self.actual_list = self.animation_list[1][random.randint(0, len(self.animation_list[1]) - 1)]
+
+
+        # Začít novou animaci
         if self.now - self.last_animation > self.random_cooldown:
             self.last_animation = self.now
             self.last_frame = self.now
             self.animation_unfinished = True
-
-            self.actual_list = self.animation_list[1]
-            if self.infected and random.randint(0, 1) == 0:
-                self.actual_list = self.animation_list[0]
-
             self.frame = 0
 
+            if self.infected and random.randint(0, 10) > 2:
+                self.actual_list = self.animation_list[0][random.randint(0, len(self.animation_list[0]) - 1)]
+            else:
+                self.actual_list = self.animation_list[1][random.randint(0, len(self.animation_list[1]) - 1)]
+
+        # Přehrávat animaci
         if self.animation_unfinished:
             if self.now - self.last_frame > 200:
                 self.last_frame = self.now
 
-                self.img = self.actual_list[self.frame]
-                self.frame += 1
-
-                if self.frame >= len(self.actual_list):
+                if self.frame < len(self.actual_list):
+                    self.img = self.actual_list[self.frame]
+                    self.frame += 1
+                else:
                     self.animation_unfinished = False
-                    self.img = pygame.image.load(f'assets/character/jaymeng.png').convert_alpha()
-                    self.random_cooldown = random.randint(2000, 3000)
+                    self.img = pygame.image.load(f'assets/character/npc/1/Walking1.png').convert_alpha()
+                    self.random_cooldown = random.randint(3000, 7000)
 
-        
+            
