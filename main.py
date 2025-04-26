@@ -41,7 +41,7 @@ while running:
 		
 		game.screen.fill((80,145,166))
 		game.screen.blit(game.surface, (0, 0))
-		game.surface.fill((110,190,66))
+		game.surface.fill((110,190,66)) 
 
     
 		screen_scroll = game.hero.update(keys, game.world.obstacles, events, game.npc_group)

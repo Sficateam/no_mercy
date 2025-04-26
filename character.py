@@ -44,7 +44,7 @@ class Player(Character, pygame.sprite.Sprite):
         self.rect.center = (x, y)
         self.idle = self.animation_load_iddle()
         self.walk = self.animation_load_walk()
-        self.attacking = self.animation_load_attacking()
+        self.fight = self.animation_load_fight()
         self.last_animation = pygame.time.get_ticks()
         self.frame = 0
         self.walking = False
@@ -71,20 +71,16 @@ class Player(Character, pygame.sprite.Sprite):
 
         return walk
 
-    def animation_load_attacking(self):
-        attacking = []
+    def animation_load_fight(self):
+        fight = []
 
         for i in range(4):
             img = pygame.image.load(f'assets/character/attack/Killing2-export{i + 1}.png').convert_alpha()
-            attacking.append(img)
+            fight.append(img)
 
-            print("attack " + str(attacking))
+            print("attack " + str(fight))
 
-        return attacking
-
-
-    
-
+        return fight
 
     def draw(self, screen):
         screen.blit(pygame.transform.flip(self.img, self.flip, False), self.rect)
@@ -174,22 +170,37 @@ class Player(Character, pygame.sprite.Sprite):
 
         return screen_scroll
     
-    def update(self, keys, obstacle_list, events, npc):
+    def update_animations(self):
         now = pygame.time.get_ticks()
-        if now - self.last_animation > 150:
-            self.last_animation = pygame.time.get_ticks()
-            if self.walking:
+
+        if self.attacking:
+            if now - self.last_animation > 80:
+                self.last_animation = pygame.time.get_ticks()
+                if self.frame >= len(self.fight):
+                    self.frame = 0
+                self.img = self.fight[self.frame]
+                self.frame += 1
+    
+        if self.walking:
+            if now - self.last_animation > 150:
+                self.last_animation = pygame.time.get_ticks()   
                 if self.frame >= len(self.walk):
                     self.frame = 0
                 self.img = self.walk[self.frame]
                 self.frame += 1
-                
-            else:
+
+        else:
+            if now - self.last_animation > 150:
+                self.last_animation = pygame.time.get_ticks() 
                 if self.frame >= len(self.idle):
                     self.frame = 0
                 self.img = self.idle[self.frame]
                 self.frame += 1
 
+    
+    def update(self, keys, obstacle_list, events, npc):
+
+        self.update_animations()
         self.input_keys(keys)
 
         for event in events:
@@ -205,6 +216,7 @@ class Player(Character, pygame.sprite.Sprite):
     def attack(self, npc_group, sound):
         for npc in npc_group:
             if self.attacking and self.in_collision(npc.bigger_rect):
+
                 sound.play()
                 if npc.infected:
                     Npc.count_infected += 1
