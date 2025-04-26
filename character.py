@@ -174,8 +174,13 @@ class Npc(Character, pygame.sprite.Sprite):
         self.movement = True
         self.infected = self.get_virus()
         self.last_move = pygame.time.get_ticks()
+
+        self.last_frame = pygame.time.get_ticks()
+        self.frame = 0
         self.last_animation = pygame.time.get_ticks()
         self.animation_list = self.load_animation_list()
+        self.animation_unfinished = False
+        self.random_cooldown = random.randint(2000, 10000)
 
     def in_collision(self, object):
         self.rect.x += 40
@@ -290,36 +295,28 @@ class Npc(Character, pygame.sprite.Sprite):
         
     def get_animation(self):
         self.now = pygame.time.get_ticks()
-        # Použijte samostatný časovač pro animaci
-        if self.now - self.last_animation > 200:  # Nastavte cooldown animace (např. 200 ms)
+        
+        if self.now - self.last_animation > self.random_cooldown:
             self.last_animation = self.now
-            if self.infected:
-                # Cyklická změna snímků animace
-                j = random.randint(0, 1)
-                if j == 0:
-                    i = random.randint(0, len(self.animation_list[0]) - 1)
-                    self.img = self.animation_list[0][i]
-                else:
-                    i = random.randint(0, len(self.animation_list[1]) - 1)
-                    self.img = self.animation_list[1][i]
-            else:
-                i = random.randint(0, len(self.animation_list[1]) - 1)
-                self.img = self.animation_list[1][i]
+            self.last_frame = self.now
+            self.animation_unfinished = True
 
-            
+            self.actual_list = self.animation_list[1]
+            if self.infected and random.randint(0, 1) == 0:
+                self.actual_list = self.animation_list[0]
 
+            self.frame = 0
 
+        if self.animation_unfinished:
+            if self.now - self.last_frame > 200:
+                self.last_frame = self.now
 
+                self.img = self.actual_list[self.frame]
+                self.frame += 1
 
-    # #handle animation
-    # #update image
-    # self.image = self.animation_list[self.action][self.frame_index]
-    # #check if enough time has passed since the last update
-    # if pygame.time.get_ticks() - self.update_time > animation_cooldown:
-    #   self.frame_index += 1
-    #   self.update_time = pygame.time.get_ticks()
-    # #check if the animation has finished
-    # if self.frame_index >= len(self.animation_list[self.action]):
-    #   self.frame_index = 0
-            
+                if self.frame >= len(self.actual_list):
+                    self.animation_unfinished = False
+                    self.img = pygame.image.load(f'assets/character/jaymeng.png').convert_alpha()
+                    self.random_cooldown = random.randint(2000, 10000)
+
         
