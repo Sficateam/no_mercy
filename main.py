@@ -1,13 +1,22 @@
 import pygame
+from pygame import mixer
 import character
 from world import World
 import constants
 from game import Game
 
+mixer.init()
 pygame.init()
 
 game = Game()
 game.setup()
+
+pygame.mixer.music.load("assets/audio/music.wav")
+pygame.mixer.music.set_volume(0.3)
+pygame.mixer.music.play(-1, 0.0, 5000)
+hit_fx = pygame.mixer.Sound("assets/audio/hit.mp3")
+hit_fx.set_volume(0.5)
+
 
 running = True
 game_state = 'start-komix'
@@ -49,7 +58,7 @@ while running:
 
 		game.hero.draw(game.surface)
 		
-		game.hero.attack(game.npc_group)
+		game.hero.attack(game.npc_group, hit_fx)
 
 		if game.npc_count(game.num_of_infected)[0] == 1:
 			game_state = 'loose'
