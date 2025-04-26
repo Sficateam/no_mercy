@@ -166,8 +166,11 @@ class Npc(Character, pygame.sprite.Sprite):
         self.movement = True
         self.infected = self.get_virus()
         self.last_move = pygame.time.get_ticks()
+
+        self.last_frame = pygame.time.get_ticks()
         self.last_animation = pygame.time.get_ticks()
         self.animation_list = self.load_animation_list()
+        self.animation_finished = False
 
     def in_collision(self, object):
         self.rect.x += 40
@@ -283,8 +286,8 @@ class Npc(Character, pygame.sprite.Sprite):
     def get_animation(self):
         self.now = pygame.time.get_ticks()
         # Použijte samostatný časovač pro animaci
-        if self.now - self.last_animation > 200:  # Nastavte cooldown animace (např. 200 ms)
-            self.last_animation = self.now
+        if self.now - self.last_frame > 1000:  # Nastavte cooldown animace (např. 200 ms)
+            self.last_frame = self.now
             if self.infected:
                 # Cyklická změna snímků animace
                 j = random.randint(0, 1)
