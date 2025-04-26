@@ -148,8 +148,8 @@ class Player(Character, pygame.sprite.Sprite):
     def attack(self, npc_group):
         for npc in npc_group:
             if self.attacking and self.rect.colliderect(npc.rect):
-                print('killed')
-
+                print('attacking')               
+                npc.is_dead = True
 
 
 class Npc(Character, pygame.sprite.Sprite):
@@ -157,11 +157,13 @@ class Npc(Character, pygame.sprite.Sprite):
         Character.__init__(self, speed)
         pygame.sprite.Sprite.__init__(self)
         self.img = pygame.image.load(f'assets/character/jaymeng.png').convert_alpha()
+        self.img_death = pygame.image.load(f'assets/world/shroom1.png').convert_alpha()
         self.flip = False
         self.direction = pygame.Vector2(0, 0)
         self.rect = self.get_random_rect(position_list)
         self.x = self.rect.x
         self.y = self.rect.y
+        self.is_dead = False
         self.movement = True
         self.infected = self.get_virus()
         self.last_move = pygame.time.get_ticks()
@@ -177,8 +179,12 @@ class Npc(Character, pygame.sprite.Sprite):
         return temp
 
     def draw(self, screen):
-        screen.blit(pygame.transform.flip(self.img, self.flip, False), self.rect)
-        pygame.draw.rect(screen, (255, 0, 0), self.rect, 2)
+        if self.is_dead:
+            screen.blit(pygame.transform.flip(self.img_death, False, False), self.rect)
+            pygame.draw.rect(screen, (255, 0, 0), self.rect, 2)
+        else:
+            screen.blit(pygame.transform.flip(self.img, self.flip, False), self.rect)
+            pygame.draw.rect(screen, (255, 0, 0), self.rect, 2)
 
     def move(self, obstacle_list, screen_scroll):
         self.now = pygame.time.get_ticks()
