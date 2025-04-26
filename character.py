@@ -163,7 +163,9 @@ class Npc(Character, pygame.sprite.Sprite):
         self.x = self.rect.x
         self.y = self.rect.y
         self.movement = True
+        self.infected = self.get_virus()
         self.last = pygame.time.get_ticks()
+        #self.animation = self.get_animation()
 
     def in_collision(self, object):
         self.rect.x += 40
@@ -182,10 +184,9 @@ class Npc(Character, pygame.sprite.Sprite):
         self.now = pygame.time.get_ticks()
         random_move_list = [0, 0, 0, 0]
         
-        if self.now - self.last > 1000:
+        if self.now - self.last > random.randint(500, 5000):
             self.last = pygame.time.get_ticks()
 
-            random_cooldown = random.randint(0, 60)
             random_move = random.randint(0,1)
             if random_move == 0:
                 self.movement = True
@@ -197,7 +198,7 @@ class Npc(Character, pygame.sprite.Sprite):
                 random_move_list[i] = random.randint(0,1)
 
 
-        if self.move:
+        if self.movement:
             
             if random_move_list[0] == 1:
                     self.direction.x = -1
@@ -209,32 +210,37 @@ class Npc(Character, pygame.sprite.Sprite):
                     self.direction.y = 1
             if random_move_list[3] == 1:
                     self.direction.y = -1
-        self.x += self.direction.x * self.speed
+
+            # Move in x direction        
+            self.x += self.direction.x * self.speed
+            
+            self.rect.centerx = int(self.x)
+            for tile in obstacle_list:
+                if self.rect.colliderect(tile):
+                    if self.direction.x > 0:
+                        self.rect.right = tile.left
+                    elif self.direction.x < 0:
+                        self.rect.left = tile.right
+                    self.x = self.rect.centerx
+
+
+            # Move in y direction
+            self.y += self.direction.y * self.speed
+            
+            self.rect.centery = int(self.y)
+            for tile in obstacle_list:
+                if self.rect.colliderect(tile):
+                    if self.direction.y > 0:
+                        self.rect.bottom = tile.top
+                    elif self.direction.y < 0:
+                        self.rect.top = tile.bottom
+                    self.y = self.rect.centery
+
+            if self.direction.length_squared() > 0:
+                self.direction = self.direction.normalize()
+    
         self.x += screen_scroll[0]
-        self.rect.centerx = int(self.x)
-        for tile in obstacle_list:
-            if self.rect.colliderect(tile):
-                if self.direction.x > 0:
-                    self.rect.right = tile.left
-                elif self.direction.x < 0:
-                    self.rect.left = tile.right
-                self.x = self.rect.centerx
-
-
-        # Move in y direction
-        self.y += self.direction.y * self.speed
         self.y += screen_scroll[1]
-        self.rect.centery = int(self.y)
-        for tile in obstacle_list:
-            if self.rect.colliderect(tile):
-                if self.direction.y > 0:
-                    self.rect.bottom = tile.top
-                elif self.direction.y < 0:
-                    self.rect.top = tile.bottom
-                self.y = self.rect.centery
-
-        if self.direction.length_squared() > 0:
-            self.direction = self.direction.normalize()
 
     def update(self):
         pass
@@ -246,3 +252,12 @@ class Npc(Character, pygame.sprite.Sprite):
     def get_random_rect(self, position_list):
         index = random.randint(0, len(position_list) - 1)
         return position_list[index].copy()
+    
+    def get_virus(self):
+        i = random.randint(0,1)
+        if i == 0:
+            return True
+        else:
+            return False
+            
+        
