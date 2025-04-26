@@ -17,7 +17,6 @@ pygame.mixer.music.play(-1, 0.0, 5000)
 hit_fx = pygame.mixer.Sound("assets/audio/hit.mp3")
 hit_fx.set_volume(0.5)
 
-
 running = True
 game_state = 'start-komix'
 
@@ -51,10 +50,8 @@ while running:
 
 		for npc in game.npc_group:
 			npc.move(game.world.obstacles, screen_scroll)
-			npc.get_animation()
 			npc.draw(game.surface)
 			npc.update()
-			
 
 		game.hero.draw(game.surface)
 		
@@ -78,7 +75,6 @@ while running:
 			game_state = 'time-up'
 
 		
-
 	elif game_state == 'win' or game_state == 'loose' or game_state == 'time-up':		
 		for event in events:
 			if event.type == pygame.QUIT:
