@@ -115,6 +115,8 @@ class Player(Character, pygame.sprite.Sprite):
                     self.bigger_rect.left = npc.rect.right
                 self.x = self.bigger_rect.centerx
 
+        
+
         # Move in y direction
         self.y += self.direction.y * self.speed
         self.bigger_rect.centery = int(self.y)
@@ -132,6 +134,8 @@ class Player(Character, pygame.sprite.Sprite):
                 elif self.direction.y < 0:
                     self.bigger_rect.top = npc.rect.bottom
                 self.y = self.bigger_rect.centery
+
+        
             
         #update scroll based on player position
         #move camera left and right

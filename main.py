@@ -60,16 +60,26 @@ while running:
 		
 		game.hero.attack(game.npc_group, hit_fx)
 
+		elapsed_time = (pygame.time.get_ticks() - game.game_time)
+		elapsed_time_seconds = elapsed_time // 1000
+
+		font = pygame.font.Font(None, 36)
+		time_display_text = font.render(f'Time: {abs(elapsed_time_seconds - constants.TIME_LIMIT_SECONDS)} s', True, (255, 255, 255))
+		game.screen.blit(time_display_text, (0, 0))
+
+
 		if game.npc_count(game.num_of_infected)[0] == 1:
 			game_state = 'loose'
 
 		if game.npc_count(game.num_of_infected)[1]:
 			game_state = 'win'
-		# if game.hero.is_dead():
-		# 	game_state = 'game_over'
+
+		if elapsed_time > constants.TIME_LIMIT:
+			game_state = 'time-up'
+
 		
 
-	elif game_state == 'win' or game_state == 'loose':
+	elif game_state == 'win' or game_state == 'loose' or game_state == 'time-up':		
 		for event in events:
 			if event.type == pygame.QUIT:
 				running = False
@@ -82,6 +92,8 @@ while running:
 			game.screen.blit(pygame.image.load(f'assets/bg/win.png').convert_alpha(), (0, 0))
 		if game_state == 'loose':
 			game.screen.blit(pygame.image.load(f'assets/bg/go.png').convert_alpha(), (0, 0))
+		if game_state == 'time-up':
+			game.screen.blit(pygame.image.load(f'assets/bg/time-up.png').convert_alpha(), (0, 0))
 
 	game.clock.tick(constants.FPS) 
 	pygame.display.flip()

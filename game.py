@@ -10,6 +10,7 @@ class Game():
         pygame.display.set_caption("No mercy!")
 
         self.surface = pygame.Surface((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT))
+        self.game_time = pygame.time.get_ticks()
 
     def setup(self):
 
@@ -23,12 +24,11 @@ class Game():
         for i in range(constants.NUMBER_OF_NPC):
             npc = character.Npc(2, self.world.positions)
             self.npc_group.add(npc)
-            print(npc.infected)
             if npc.infected:
                 self.num_of_infected += 1
 
-        print(self.num_of_infected)
         self.screen_scroll = [0, 0]
+
 
     def npc_count(self, num_of_infected):
         all_infected_killed = (num_of_infected == character.Npc.count_infected)
