@@ -260,26 +260,26 @@ class Npc(Character, pygame.sprite.Sprite):
         else:
             return False
         
-    def get_animation(self):
-        self.now = pygame.time.get_ticks()
-        if self.now - self.last_move > random.randint(500, 5000):
-            self.last_move = pygame.time.get_ticks()
+    # def get_animation(self):
+    #     self.now = pygame.time.get_ticks()
+    #     if self.now - self.last_move > random.randint(500, 5000):
+    #         self.last_move = pygame.time.get_ticks()
 
-            if self.infected:
+    #         if self.infected:
             
 
 
 
 
-    #handle animation
-    #update image
-    self.image = self.animation_list[self.action][self.frame_index]
-    #check if enough time has passed since the last update
-    if pygame.time.get_ticks() - self.update_time > animation_cooldown:
-      self.frame_index += 1
-      self.update_time = pygame.time.get_ticks()
-    #check if the animation has finished
-    if self.frame_index >= len(self.animation_list[self.action]):
-      self.frame_index = 0
+    # #handle animation
+    # #update image
+    # self.image = self.animation_list[self.action][self.frame_index]
+    # #check if enough time has passed since the last update
+    # if pygame.time.get_ticks() - self.update_time > animation_cooldown:
+    #   self.frame_index += 1
+    #   self.update_time = pygame.time.get_ticks()
+    # #check if the animation has finished
+    # if self.frame_index >= len(self.animation_list[self.action]):
+    #   self.frame_index = 0
             
         
