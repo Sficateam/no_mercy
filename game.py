@@ -20,11 +20,7 @@ class Game():
         self.hero = character.Player(300, 300, 4)
 
         self.npc_group = pygame.sprite.Group()
-        self.num_of_infected = 1
-
-        start_npc = character.Npc(2, self.world.positions)
-        start_npc.infected = True
-        self.npc_group.add(start_npc)
+        self.num_of_infected = 0
 
         for i in range(constants.NUMBER_OF_NPC):
             npc = character.Npc(2, self.world.positions)
@@ -40,6 +36,8 @@ class Game():
 
     def npc_count(self, num_of_infected):
         all_infected_killed = (num_of_infected == character.Npc.count_infected)
+        if num_of_infected == 0:
+            all_infected_killed = False
         return character.Npc.count_innocent, all_infected_killed
     
     def reset_time(self):
