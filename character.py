@@ -87,7 +87,7 @@ class Player(Character, pygame.sprite.Sprite):
                     self.rect.left = tile.right - 40
                 self.x = self.rect.centerx
         for npc in npc_group:
-            if self.rect.colliderect(npc):
+            if self.in_collision(npc):
                 if self.direction.x > 0:
                     self.rect.right = npc.rect.left
                 elif self.direction.x < 0:
@@ -139,14 +139,16 @@ class Player(Character, pygame.sprite.Sprite):
             self.input_event(event)
 
         new_scroll = None
-        print(self.attacking)
+        
 
         if new_scroll:
             return new_scroll
         return self.move(obstacle_list, npc)
     
-    def attack(self, npc):
-        pass
+    def attack(self, npc_group):
+        for npc in npc_group:
+            if self.attacking and self.rect.colliderect(npc.rect):
+                print('killed')
 
 
 
