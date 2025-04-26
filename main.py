@@ -35,7 +35,6 @@ while running:
 		game.screen.blit(pygame.image.load(f'assets/bg/First-comics-001.png').convert_alpha(), (0, 0))
 	
 	elif game_state == 'play':
-		print(game.game_time)
 
 		keys = pygame.key.get_pressed() 
 		
