@@ -36,7 +36,7 @@ class Player(Character, pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.x = x
         self.y = y
-        self.img = pygame.image.load(f'assets/character/melon.png').convert_alpha()
+        self.img = pygame.image.load(f'assets/character/idle/wiggling1.png').convert_alpha()
         self.direction = pygame.Vector2(0, 0)
         self.attacking = False
         self.flip = False
@@ -65,10 +65,10 @@ class Player(Character, pygame.sprite.Sprite):
 
         if keys[pygame.K_a]:
                 self.direction.x = -1
-                self.flip = False
+                self.flip = True
         if keys[pygame.K_d]:
                 self.direction.x = 1
-                self.flip = True
+                self.flip = False
         if keys[pygame.K_s]:
                 self.direction.y = 1
         if keys[pygame.K_w]:
