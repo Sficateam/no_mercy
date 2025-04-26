@@ -34,6 +34,13 @@ class Player(Character, pygame.sprite.Sprite):
         self.rect = pygame.Rect(0, 0, constants.TILE_SIZE, constants.TILE_SIZE)
         self.rect.center = (x, y)
 
+    def animation_load(self):
+        idle = []
+
+        for i in range(17):
+            img = pygame.image.load(f'assets/character/main/wiggling{i + 1}.png').convert_alpha()
+            idle.append(img)
+
     def draw(self, screen):
         screen.blit(pygame.transform.flip(self.img, self.flip, False), self.rect)
         pygame.draw.rect(screen, (255, 0, 0), self.rect, 2)
