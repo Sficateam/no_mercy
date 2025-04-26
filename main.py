@@ -31,11 +31,12 @@ while running:
 	if game_state == 'start-komix':
 		for event in events:
 			if event.type == pygame.KEYDOWN:
-				if event.key == pygame.K_SPACE:
+				if event.key == pygame.K_KP_ENTER or event.key == pygame.K_RETURN:
 					game_state = 'play'
-		game.screen.blit(pygame.image.load(f'assets/bg/bg1.png').convert_alpha(), (0, 0))
+		game.screen.blit(pygame.image.load(f'assets/bg/First-comics-001.png').convert_alpha(), (0, 0))
 	
 	elif game_state == 'play':
+		print(game.game_time)
 
 		keys = pygame.key.get_pressed() 
 		
@@ -78,22 +79,19 @@ while running:
 			game_state = 'time-up'
 
 		
-
-	elif game_state == 'win' or game_state == 'loose' or game_state == 'time-up':		
+	elif game_state == 'win' or game_state == 'loose' or game_state == 'time-up':
 		for event in events:
-			if event.type == pygame.QUIT:
-				running = False
 			if event.type == pygame.KEYDOWN:
-				if event.key == pygame.K_SPACE:
-					if event.button == 1:
-						game_state = 'menu'
-						game.setup()
+				if event.key == pygame.K_KP_ENTER or event.key == pygame.K_RETURN:
+					game_state = 'start-komix'
+					game.setup()					
+										
 		if game_state == 'win':
-			game.screen.blit(pygame.image.load(f'assets/bg/win.png').convert_alpha(), (0, 0))
+			game.screen.blit(pygame.image.load(f'assets/bg/Ending-win.png').convert_alpha(), (0, 0))
 		if game_state == 'loose':
-			game.screen.blit(pygame.image.load(f'assets/bg/go.png').convert_alpha(), (0, 0))
+			game.screen.blit(pygame.image.load(f'assets/bg/Kill-innocent.png').convert_alpha(), (0, 0))
 		if game_state == 'time-up':
-			game.screen.blit(pygame.image.load(f'assets/bg/time-up.png').convert_alpha(), (0, 0))
+			game.screen.blit(pygame.image.load(f'assets/bg/Time-over.png').convert_alpha(), (0, 0))	
 
 	game.clock.tick(constants.FPS) 
 	pygame.display.flip()
