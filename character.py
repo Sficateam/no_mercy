@@ -20,6 +20,15 @@ class Character(ABC):
     def update(self):
         pass
 
+    def in_collision(self, object):
+        self.bigger_rect.x += 40
+        self.bigger_rect.width -= 80
+        temp = self.bigger_rect.colliderect(object)
+        self.bigger_rect.x -= 40
+        self.bigger_rect.width += 80
+
+        return temp
+
 
 class Player(Character, pygame.sprite.Sprite):
     def __init__(self, x, y, speed):
@@ -154,7 +163,7 @@ class Player(Character, pygame.sprite.Sprite):
     
     def attack(self, npc_group, sound):
         for npc in npc_group:
-            if self.attacking and self.rect.colliderect(npc.rect):
+            if self.attacking and self.in_collision(npc.bigger_rect):
                 sound.play()
                 if npc.infected:
                     Npc.count_infected += 1
@@ -177,8 +186,9 @@ class Npc(Character, pygame.sprite.Sprite):
         self.flip = False
         self.direction = pygame.Vector2(0, 0)
         self.rect = self.get_random_rect(position_list)
-        self.x = self.rect.x
-        self.y = self.rect.y
+        self.bigger_rect = self.rect.inflate(30, 30)
+        self.x = self.bigger_rect.x
+        self.y = self.bigger_rect.y
         self.is_dead = False
         self.movement = True
         self.infected = self.get_virus()
@@ -191,21 +201,13 @@ class Npc(Character, pygame.sprite.Sprite):
         self.animation_unfinished = False
         self.random_cooldown = random.randint(2000, 10000)
 
-    def in_collision(self, object):
-        self.rect.x += 40
-        self.rect.width -= 80
-        temp = self.rect.colliderect(object)
-        self.rect.x -= 40
-        self.rect.width += 80
-
-        return temp
 
     def draw(self, screen):
         if self.is_dead:
-            screen.blit(pygame.transform.flip(self.img_death, False, False), self.rect)
+            screen.blit(pygame.transform.flip(self.img_death, False, False), self.bigger_rect)
         else:
-            screen.blit(pygame.transform.flip(self.img, self.flip, False), self.rect)
-            pygame.draw.rect(screen, (255, 0, 0), self.rect, 2)
+            screen.blit(pygame.transform.flip(self.img, self.flip, False), self.bigger_rect)
+            pygame.draw.rect(screen, (255, 0, 0), self.bigger_rect, 2)
 
     def move(self, obstacle_list, screen_scroll):
         self.now = pygame.time.get_ticks()
@@ -241,27 +243,27 @@ class Npc(Character, pygame.sprite.Sprite):
             # Move in x direction        
             self.x += self.direction.x * self.speed
             self.x += screen_scroll[0]
-            self.rect.centerx = int(self.x)
+            self.bigger_rect.centerx = int(self.x)
             for tile in obstacle_list:
-                if self.rect.colliderect(tile):
+                if self.bigger_rect.colliderect(tile):
                     if self.direction.x > 0:
-                        self.rect.right = tile.left
+                        self.bigger_rect.right = tile.left
                     elif self.direction.x < 0:
-                        self.rect.left = tile.right
-                    self.x = self.rect.centerx
+                        self.bigger_rect.left = tile.right
+                    self.x = self.bigger_rect.centerx
 
 
             # Move in y direction
             self.y += self.direction.y * self.speed
             self.y += screen_scroll[1]
-            self.rect.centery = int(self.y)
+            self.bigger_rect.centery = int(self.y)
             for tile in obstacle_list:
-                if self.rect.colliderect(tile):
+                if self.bigger_rect.colliderect(tile):
                     if self.direction.y > 0:
-                        self.rect.bottom = tile.top
+                        self.bigger_rect.bottom = tile.top
                     elif self.direction.y < 0:
-                        self.rect.top = tile.bottom
-                    self.y = self.rect.centery
+                        self.bigger_rect.top = tile.bottom
+                    self.y = self.bigger_rect.centery
 
             if self.direction.length_squared() > 0:
                 self.direction = self.direction.normalize()
@@ -269,8 +271,8 @@ class Npc(Character, pygame.sprite.Sprite):
         else:
             self.x += screen_scroll[0]
             self.y += screen_scroll[1]
-            self.rect.centerx = int(self.x)
-            self.rect.centery = int(self.y)
+            self.bigger_rect.centerx = int(self.x)
+            self.bigger_rect.centery = int(self.y)
 
     def update(self):
         if self.is_dead:
