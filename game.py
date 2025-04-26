@@ -22,6 +22,6 @@ class Game():
         for i in range(50):
             npc = character.Npc(2, self.world.positions)
             self.npc_group.add(npc)
-
+        
 
         self.screen_scroll = [0, 0]

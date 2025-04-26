@@ -42,7 +42,9 @@ while running:
 
 		for npc in game.npc_group:
 			npc.move(game.world.obstacles, screen_scroll)
+			npc.get_animation()
 			npc.draw(game.surface)
+			
 
 
 		game.hero.draw(game.surface)

@@ -31,7 +31,7 @@ class Player(Character, pygame.sprite.Sprite):
         self.direction = pygame.Vector2(0, 0)
         self.attacking = False
         self.flip = False
-        self.rect = self.img.get_rect()
+        self.rect = pygame.Rect(0, 0, constants.TILE_SIZE, constants.TILE_SIZE)
         self.rect.center = (x, y)
 
     def draw(self, screen):
@@ -147,8 +147,7 @@ class Player(Character, pygame.sprite.Sprite):
     
     def attack(self, npc_group):
         for npc in npc_group:
-            if self.attacking and self.rect.colliderect(npc.rect):
-                print('attacking')               
+            if self.attacking and self.rect.colliderect(npc.rect):            
                 npc.is_dead = True
 
 
@@ -168,6 +167,7 @@ class Npc(Character, pygame.sprite.Sprite):
         self.infected = self.get_virus()
         self.last_move = pygame.time.get_ticks()
         self.last_animation = pygame.time.get_ticks()
+        self.animation_list = self.load_animation_list()
 
     def in_collision(self, object):
         self.rect.x += 40
@@ -266,12 +266,38 @@ class Npc(Character, pygame.sprite.Sprite):
         else:
             return False
         
-    # def get_animation(self):
-    #     self.now = pygame.time.get_ticks()
-    #     if self.now - self.last_move > random.randint(500, 5000):
-    #         self.last_move = pygame.time.get_ticks()
+    def load_animation_list(self):
+        infected = []
+        faked = []
+        for i in range(2):
+            for j in range(2):
+                faked.append(pygame.image.load(f'assets/character/faked/{j}/jaymeng{i}.png').convert_alpha())
+                infected.append(pygame.image.load(f'assets/character/infected/{j}/jaymeng{i}.png').convert_alpha())
+        animation_list = []
+        animation_list.append(infected)
+        animation_list.append(faked)
 
-    #         if self.infected:
+        return animation_list
+
+        
+    def get_animation(self):
+        self.now = pygame.time.get_ticks()
+        # Použijte samostatný časovač pro animaci
+        if self.now - self.last_animation > 200:  # Nastavte cooldown animace (např. 200 ms)
+            self.last_animation = self.now
+            if self.infected:
+                # Cyklická změna snímků animace
+                j = random.randint(0, 1)
+                if j == 0:
+                    i = random.randint(0, len(self.animation_list[0]) - 1)
+                    self.img = self.animation_list[0][i]
+                else:
+                    i = random.randint(0, len(self.animation_list[1]) - 1)
+                    self.img = self.animation_list[1][i]
+            else:
+                i = random.randint(0, len(self.animation_list[1]) - 1)
+                self.img = self.animation_list[1][i]
+
             
 
 
