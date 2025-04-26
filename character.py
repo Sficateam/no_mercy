@@ -231,7 +231,7 @@ class Npc(Character, pygame.sprite.Sprite):
 
             # Move in x direction        
             self.x += self.direction.x * self.speed
-            
+            self.x += screen_scroll[0]
             self.rect.centerx = int(self.x)
             for tile in obstacle_list:
                 if self.rect.colliderect(tile):
@@ -244,7 +244,7 @@ class Npc(Character, pygame.sprite.Sprite):
 
             # Move in y direction
             self.y += self.direction.y * self.speed
-            
+            self.y += screen_scroll[1]
             self.rect.centery = int(self.y)
             for tile in obstacle_list:
                 if self.rect.colliderect(tile):
@@ -256,9 +256,12 @@ class Npc(Character, pygame.sprite.Sprite):
 
             if self.direction.length_squared() > 0:
                 self.direction = self.direction.normalize()
-    
-        self.x += screen_scroll[0]
-        self.y += screen_scroll[1]
+
+        else:
+            self.x += screen_scroll[0]
+            self.y += screen_scroll[1]
+            self.rect.centerx = int(self.x)
+            self.rect.centery = int(self.y)
 
     def update(self):
         if self.is_dead:
