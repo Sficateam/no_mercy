@@ -44,11 +44,12 @@ while running:
 			npc.move(game.world.obstacles, screen_scroll)
 			npc.draw(game.surface)
 
-
 		game.hero.draw(game.surface)
 		
 		game.hero.attack(game.npc_group)
 
+		if game.npc_count()[0] == 3:
+			game_state = 'game_over'
 		# if game.hero.is_dead():
 		# 	game_state = 'game_over'
 		

@@ -19,9 +19,13 @@ class Game():
         self.hero = character.Player(200, 200, 4)
 
         self.npc_group = pygame.sprite.Group()
-        for i in range(50):
+        for i in range(5):
             npc = character.Npc(2, self.world.positions)
             self.npc_group.add(npc)
+            print(npc.infected)
 
 
         self.screen_scroll = [0, 0]
+
+    def npc_count(self):
+        return character.Npc.count_innocent, character.Npc.count_infected

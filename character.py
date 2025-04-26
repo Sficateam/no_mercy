@@ -148,11 +148,20 @@ class Player(Character, pygame.sprite.Sprite):
     def attack(self, npc_group):
         for npc in npc_group:
             if self.attacking and self.rect.colliderect(npc.rect):
-                print('attacking')               
+                if npc.infected:
+                    Npc.count_infected += 1
+                    print('killed infected')
+                else:
+                    Npc.count_innocent += 1 
+                    print('killed innocent')             
                 npc.is_dead = True
 
 
 class Npc(Character, pygame.sprite.Sprite):
+
+    count_innocent = 0
+    count_infected = 0
+
     def __init__(self, speed, position_list):
         Character.__init__(self, speed)
         pygame.sprite.Sprite.__init__(self)
@@ -181,7 +190,7 @@ class Npc(Character, pygame.sprite.Sprite):
     def draw(self, screen):
         if self.is_dead:
             screen.blit(pygame.transform.flip(self.img_death, False, False), self.rect)
-            pygame.draw.rect(screen, (255, 0, 0), self.rect, 2)
+            self.kill()
         else:
             screen.blit(pygame.transform.flip(self.img, self.flip, False), self.rect)
             pygame.draw.rect(screen, (255, 0, 0), self.rect, 2)
