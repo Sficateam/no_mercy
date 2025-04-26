@@ -41,18 +41,23 @@ class Player(Character, pygame.sprite.Sprite):
         self.attacking = False
         self.flip = False
         self.rect = pygame.Rect(0, 0, constants.TILE_SIZE, constants.TILE_SIZE)
-        self.rect.center = (x, y)
+        self.bigger_rect = self.rect.inflate(40, 40)
+        self.bigger_rect.center = (x, y)
+        self.idle = self.animation_load()
+        self.last_animation = pygame.time.get_ticks()
+        self.frame = 0
 
     def animation_load(self):
         idle = []
 
         for i in range(17):
-            img = pygame.image.load(f'assets/character/main/wiggling{i + 1}.png').convert_alpha()
+            img = pygame.image.load(f'assets/character/idle/wiggling{i + 1}.png').convert_alpha()
             idle.append(img)
+        return idle
 
     def draw(self, screen):
-        screen.blit(pygame.transform.flip(self.img, self.flip, False), self.rect)
-        pygame.draw.rect(screen, (255, 0, 0), self.rect, 2)
+        screen.blit(pygame.transform.flip(self.img, self.flip, False), self.bigger_rect)
+        pygame.draw.rect(screen, (255, 0, 0), self.bigger_rect, 2)
 
     def input_keys(self, keys):
         self.direction.x = 0
@@ -78,11 +83,11 @@ class Player(Character, pygame.sprite.Sprite):
                 self.attacking = False
 
     def in_collision(self, object):
-        self.rect.x += 40
-        self.rect.width -= 80
-        temp = self.rect.colliderect(object)
-        self.rect.x -= 40
-        self.rect.width += 80
+        self.bigger_rect.x += 40
+        self.bigger_rect.width -= 80
+        temp = self.bigger_rect.colliderect(object)
+        self.bigger_rect.x -= 40
+        self.bigger_rect.width += 80
 
         return temp
     
@@ -94,61 +99,69 @@ class Player(Character, pygame.sprite.Sprite):
 
         # Move in x direction
         self.x += self.direction.x * self.speed
-        self.rect.centerx = int(self.x)
+        self.bigger_rect.centerx = int(self.x)
         for tile in obstacle_list:
             if self.in_collision(tile):
                 if self.direction.x > 0:
-                    self.rect.right = tile.left + 40
+                    self.bigger_rect.right = tile.left + 40
                 elif self.direction.x < 0:
-                    self.rect.left = tile.right - 40
-                self.x = self.rect.centerx
+                    self.bigger_rect.left = tile.right - 40
+                self.x = self.bigger_rect.centerx
         for npc in npc_group:
             if self.in_collision(npc):
                 if self.direction.x > 0:
-                    self.rect.right = npc.rect.left
+                    self.bigger_rect.right = npc.rect.left
                 elif self.direction.x < 0:
-                    self.rect.left = npc.rect.right
-                self.x = self.rect.centerx
+                    self.bigger_rect.left = npc.rect.right
+                self.x = self.bigger_rect.centerx
 
         # Move in y direction
         self.y += self.direction.y * self.speed
-        self.rect.centery = int(self.y)
+        self.bigger_rect.centery = int(self.y)
         for tile in obstacle_list:
             if self.in_collision(tile):
                 if self.direction.y > 0:
-                    self.rect.bottom = tile.top
+                    self.bigger_rect.bottom = tile.top
                 elif self.direction.y < 0:
-                    self.rect.top = tile.bottom
-                self.y = self.rect.centery
+                    self.bigger_rect.top = tile.bottom
+                self.y = self.bigger_rect.centery
         for npc in npc_group:
             if self.in_collision(npc):
                 if self.direction.y > 0:
-                    self.rect.bottom = npc.rect.top
+                    self.bigger_rect.bottom = npc.rect.top
                 elif self.direction.y < 0:
-                    self.rect.top = npc.rect.bottom
-                self.y = self.rect.centery
+                    self.bigger_rect.top = npc.rect.bottom
+                self.y = self.bigger_rect.centery
             
         #update scroll based on player position
         #move camera left and right
         if self.direction.length_squared() > 0:
-            if self.rect.right > (constants.SCREEN_WIDTH - constants.SCROLL_THRESH):
+            if self.bigger_rect.right > (constants.SCREEN_WIDTH - constants.SCROLL_THRESH):
                 screen_scroll[0] = -self.speed
                 self.x -= self.speed
-            if self.rect.left < constants.SCROLL_THRESH:
+            if self.bigger_rect.left < constants.SCROLL_THRESH:
                 screen_scroll[0] = self.speed
                 self.x += self.speed
 
             #move camera up and down
-            if self.rect.bottom > (constants.SCREEN_HEIGHT - constants.SCROLL_THRESH):
+            if self.bigger_rect.bottom > (constants.SCREEN_HEIGHT - constants.SCROLL_THRESH):
                 screen_scroll[1] = -self.speed
                 self.y -= self.speed
-            if self.rect.top < constants.SCROLL_THRESH:
+            if self.bigger_rect.top < constants.SCROLL_THRESH:
                 screen_scroll[1] = self.speed
                 self.y += self.speed
                     
         return screen_scroll
     
     def update(self, keys, obstacle_list, events, npc):
+        now = pygame.time.get_ticks()
+        if now - self.last_animation > 1500:
+            self.img = self.idle[self.frame]
+            self.frame += 1
+            if self.frame == len(self.idle):
+                self.frame = 0
+
+
         self.input_keys(keys)
 
         for event in events:
@@ -309,7 +322,7 @@ class Npc(Character, pygame.sprite.Sprite):
         
     def get_animation(self):
         self.now = pygame.time.get_ticks()
-        
+
         if self.now - self.last_animation > self.random_cooldown:
             self.last_animation = self.now
             self.last_frame = self.now
