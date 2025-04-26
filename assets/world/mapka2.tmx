@@ -7,7 +7,6 @@
    <image source="shroom1.png" width="64" height="64"/>
   </tile>
  </tileset>
- <tileset firstgid="258" source="../../../img/paralelnisvety/insi.tsx"/>
  <layer id="4" name="Vrstva dlaždic 1" width="100" height="80">
   <data encoding="csv">
 4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,

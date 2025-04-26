@@ -150,10 +150,8 @@ class Player(Character, pygame.sprite.Sprite):
             if self.attacking and self.rect.colliderect(npc.rect):
                 if npc.infected:
                     Npc.count_infected += 1
-                    print('killed infected')
                 else:
-                    Npc.count_innocent += 1 
-                    print('killed innocent')             
+                    Npc.count_innocent += 1             
                 npc.is_dead = True
 
 
@@ -191,7 +189,6 @@ class Npc(Character, pygame.sprite.Sprite):
     def draw(self, screen):
         if self.is_dead:
             screen.blit(pygame.transform.flip(self.img_death, False, False), self.rect)
-            self.kill()
         else:
             screen.blit(pygame.transform.flip(self.img, self.flip, False), self.rect)
             pygame.draw.rect(screen, (255, 0, 0), self.rect, 2)
@@ -259,7 +256,8 @@ class Npc(Character, pygame.sprite.Sprite):
         self.y += screen_scroll[1]
 
     def update(self):
-        pass
+        if self.is_dead:
+            self.kill()
 
     def get_postion(self, position_list):
         i = random.randint(0, len(position_list) - 1)

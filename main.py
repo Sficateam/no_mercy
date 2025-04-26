@@ -44,27 +44,35 @@ while running:
 			npc.move(game.world.obstacles, screen_scroll)
 			npc.get_animation()
 			npc.draw(game.surface)
+			npc.update()
 			
 
 		game.hero.draw(game.surface)
 		
 		game.hero.attack(game.npc_group)
 
-		if game.npc_count()[0] == 3:
-			game_state = 'game_over'
+		if game.npc_count(game.num_of_infected)[0] == 1:
+			game_state = 'loose'
+
+		if game.npc_count(game.num_of_infected)[1]:
+			game_state = 'win'
 		# if game.hero.is_dead():
 		# 	game_state = 'game_over'
 		
 
-	elif game_state == 'game_over':
+	elif game_state == 'win' or game_state == 'loose':
 		for event in events:
 			if event.type == pygame.QUIT:
 				running = False
-			if event.type == pygame.MOUSEBUTTONDOWN:
-				if event.button == 1:
-					game_state = 'menu'
-					game.setup()
-		game.screen.blit(pygame.image.load(f'assets/bg/go.png').convert_alpha(), (0, 0))
+			if event.type == pygame.KEYDOWN:
+				if event.key == pygame.K_SPACE:
+					if event.button == 1:
+						game_state = 'menu'
+						game.setup()
+		if game_state == 'win':
+			game.screen.blit(pygame.image.load(f'assets/bg/win.png').convert_alpha(), (0, 0))
+		if game_state == 'loose':
+			game.screen.blit(pygame.image.load(f'assets/bg/go.png').convert_alpha(), (0, 0))
 
 	game.clock.tick(constants.FPS) 
 	pygame.display.flip()
