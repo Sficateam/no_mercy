@@ -20,7 +20,7 @@ class Game():
 
         self.npc_group = pygame.sprite.Group()
         self.num_of_infected = 0
-        for i in range(5):
+        for i in range(constants.NUMBER_OF_NPC):
             npc = character.Npc(2, self.world.positions)
             self.npc_group.add(npc)
             print(npc.infected)

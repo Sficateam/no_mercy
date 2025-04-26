@@ -317,6 +317,6 @@ class Npc(Character, pygame.sprite.Sprite):
                 if self.frame >= len(self.actual_list):
                     self.animation_unfinished = False
                     self.img = pygame.image.load(f'assets/character/jaymeng.png').convert_alpha()
-                    self.random_cooldown = random.randint(2000, 10000)
+                    self.random_cooldown = random.randint(2000, 3000)
 
         
