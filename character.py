@@ -31,6 +31,7 @@ class Character(ABC):
         return temp
     
     def animation_load(self, list, path):
+
         i = 1
         while True:
             filename = f'{path}{i}.png'
@@ -40,6 +41,8 @@ class Character(ABC):
                 i += 1
             else:
                 break
+            
+
         return list
 
 
@@ -229,8 +232,8 @@ class Npc(Character, pygame.sprite.Sprite):
         self.last_animation = pygame.time.get_ticks()
         self.animation_list = self.load_animation_list()
         self.animation_unfinished = False
-        self.random_cooldown = random.randint(3000, 7000)
-        self.actual_list = self.animation_list[0]
+        self.random_cooldown = 1500#random.randint(1000, 2000)
+        self.actual_list = self.animation_list[1]
 
 
     def draw(self, screen):
@@ -371,18 +374,6 @@ class Npc(Character, pygame.sprite.Sprite):
     def get_animation(self):
         self.now = pygame.time.get_ticks()
 
-        # if not self.animation_unfinished and self.now - self.last_animation > self.random_cooldown:
-        #     self.last_animation = self.now
-        #     self.last_frame = self.now
-        #     self.animation_unfinished = True
-        #     self.frame = 0
-
-        #     if self.infected:
-        #         self.actual_list = self.animation_list[0][random.randint(0, len(self.animation_list[0]) - 1)]
-        #     else:
-        #         self.actual_list = self.animation_list[1][random.randint(0, len(self.animation_list[1]) - 1)]
-
-
         # Začít novou animaci
         if self.now - self.last_animation > self.random_cooldown:
             self.last_animation = self.now
@@ -390,14 +381,17 @@ class Npc(Character, pygame.sprite.Sprite):
             self.animation_unfinished = True
             self.frame = 0
 
-            if self.infected and random.randint(0, 10) > 2:
-                self.actual_list = self.animation_list[0][random.randint(0, len(self.animation_list[0]) - 1)]
+
+            index = random.randint(4, 6)
+            a = random.randint(0,1000)
+            if self.infected:
+                self.actual_list = self.animation_list[1][random.randint(3, 5)]
             else:
-                self.actual_list = self.animation_list[1][random.randint(0, len(self.animation_list[1]) - 1)]
+                self.actual_list = self.animation_list[1][random.randint(0, 2)]
 
         # Přehrávat animaci
         if self.animation_unfinished:
-            if self.now - self.last_frame > 200:
+            if self.now - self.last_frame > 60:
                 self.last_frame = self.now
 
                 if self.frame < len(self.actual_list):
@@ -406,6 +400,6 @@ class Npc(Character, pygame.sprite.Sprite):
                 else:
                     self.animation_unfinished = False
                     self.img = pygame.image.load(f'assets/character/npc/1/Walking1.png').convert_alpha()
-                    self.random_cooldown = random.randint(3000, 7000)
+                    self.random_cooldown = 1500#random.randint(500, 1000)
 
             
