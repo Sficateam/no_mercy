@@ -28,11 +28,13 @@ while running:
 			running = False
 
 	if game_state == 'start-komix':
+		print(game.game_time)
 		for event in events:
 			if event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_KP_ENTER or event.key == pygame.K_RETURN:
 					game_state = 'play'
-		game.screen.blit(pygame.image.load(f'assets/bg/First-comics-001.png').convert_alpha(), (0, 0))
+					game.reset_time()
+		# game.intro_animation()
 	
 	elif game_state == 'play':
 
@@ -60,8 +62,8 @@ while running:
 		elapsed_time = (pygame.time.get_ticks() - game.game_time)
 		elapsed_time_seconds = elapsed_time // 1000
 
-		font = pygame.font.Font(None, 36)
-		time_display_text = font.render(f'Time: {abs(elapsed_time_seconds - constants.TIME_LIMIT_SECONDS)} s', True, (255, 255, 255))
+		
+		time_display_text = game.font.render(f'Time: {abs(elapsed_time_seconds - constants.TIME_LIMIT_SECONDS)} s', True, (255, 255, 255))
 		game.screen.blit(time_display_text, (0, 0))
 
 
@@ -72,6 +74,8 @@ while running:
 			game_state = 'win'
 
 		if elapsed_time > constants.TIME_LIMIT:
+			if game.npc_count(game.num_of_infected)[1]:
+				game_state = 'win'
 			game_state = 'time-up'
 
 		
