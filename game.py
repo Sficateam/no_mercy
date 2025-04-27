@@ -14,7 +14,9 @@ class Game():
         self.intro_images = self.intro_images_load()
         self.last_frame = pygame.time.get_ticks()
         self.current_intro_frame = 0
-        self.font = pygame.font.Font(None, 36)
+        self.time_font = pygame.font.Font(None, constants.TIME_TEXT_FONT_SIZE)
+        self.intro_font = pygame.font.Font(None, constants.INTRO_TEXT_FONT_SIZE)
+        self.intro_font_outline = pygame.font.Font(None, constants.INTRO_TEXT_FONT_SIZE)
 
     def setup(self):
 
@@ -70,6 +72,16 @@ class Game():
                 self.current_intro_frame += 1
 
         img = self.intro_images[self.current_intro_frame]
-        text = self.font.render(f'Zde bude text', True, (0, 0, 0))
+        text = constants.INTRO_SLIDES_TEXT[self.current_intro_frame]
+        main_text = self.intro_font.render(text, True, (255, 255, 255))
+        outline = self.intro_font_outline.render(text, True, (0, 0, 0))
+
+        text_x = constants.SCREEN_WIDTH // 2 - main_text.get_width() // 2
+        text_y = 600
+
         self.screen.blit(img.convert_alpha(), (0, 0))
-        self.screen.blit(text, ((self.screen.get_width() // 2) - text.get_width(), 600))
+
+        for dx in [-constants.TEXT_OUTLINE_THICKNESS, 0, constants.TEXT_OUTLINE_THICKNESS]:
+            for dy in [-constants.TEXT_OUTLINE_THICKNESS, 0, constants.TEXT_OUTLINE_THICKNESS]:
+                self.screen.blit(outline, (text_x + dx, text_y + dy))
+        self.screen.blit(main_text, (text_x, text_y))
