@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="18" height="10" tilewidth="128" tileheight="128" infinite="0" nextlayerid="5" nextobjectid="1">
  <tileset firstgid="1" name="Tile-set-128x128" tilewidth="128" tileheight="128" tilecount="96" columns="16">
-  <image source="../Tile-set-128x128.png" width="2048" height="769"/>
+  <image source="Tile-set-128x128.png" width="2048" height="769"/>
  </tileset>
  <tileset firstgid="97" name="Tile-set-128x128_V2" tilewidth="128" tileheight="128" tilecount="96" columns="16">
-  <image source="../Tile-set-128x128.png" width="2048" height="769"/>
+  <image source="Tile-set-128x128.png" width="2048" height="769"/>
   <tile id="3">
    <objectgroup draworder="index" id="2">
     <object id="1" x="0" y="0" width="67.8182" height="127.818"/>
@@ -240,6 +240,12 @@
    </objectgroup>
   </tile>
  </tileset>
+ <tileset firstgid="193" name="Walking1" tilewidth="128" tileheight="128" tilecount="1" columns="0">
+  <grid orientation="orthogonal" width="1" height="1"/>
+  <tile id="0">
+   <image source="../character/npc/1/Walking1.png" width="128" height="128"/>
+  </tile>
+ </tileset>
  <layer id="1" name="Vrstva dlaždic 1" width="18" height="10">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -259,7 +265,7 @@
 41,41,41,41,41,41,41,41,41,41,41,41,41,41,39,40,41,41,
 41,31,30,28,31,24,51,28,24,0,28,51,51,28,0,0,30,41,
 41,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,41,
-41,35,0,0,0,0,21,1,11,21,21,0,0,0,21,0,9,41,
+41,35,0,0,0,0,100,1,11,21,21,0,0,0,21,0,9,41,
 41,8,0,5,0,0,4,0,0,0,36,0,36,0,4,0,36,41,
 41,8,0,13,4,0,4,9,35,0,12,0,5,0,4,0,7,41,
 41,8,0,13,10,0,4,0,0,0,12,0,4,0,0,0,9,41,
@@ -271,13 +277,13 @@
  <layer id="3" name="positions" width="18" height="10" visible="0">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,193,0,0,
+0,0,0,0,0,0,0,193,0,0,0,0,0,0,193,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,193,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,193,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,193,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>

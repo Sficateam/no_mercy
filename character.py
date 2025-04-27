@@ -211,7 +211,7 @@ class Npc(Character, pygame.sprite.Sprite):
         self.flip = False
         self.direction = pygame.Vector2(0, 0)
         self.rect = self.get_random_rect(position_list)
-        self.bigger_rect = self.rect.inflate(92, 92)
+        self.bigger_rect = self.rect
         self.x = self.bigger_rect.x
         self.y = self.bigger_rect.y
         self.is_dead = False
