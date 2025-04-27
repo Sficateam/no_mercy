@@ -31,9 +31,16 @@ INTRO_SLIDES_TEXT = ['Merciii', 'Gimme', 'Nom Nom', 'Oh no', 'Hero is here to sa
 X_SHIFT = 40
 WIDTH_SCALE = 80
 
-COUCHE = 1
-EAT = 2
-HAPPY = 3
-
 #sound cooldown
-ANOUC = 5000
+ANOUC_COOLDOWN = 2000
+
+#sound volume
+BACKROUND = 0.8
+ANOUC = 0.8
+EAT = 0.3
+COUCHE = 0.3
+WIN = 0.5
+LOOSE = 0.5
+ESCAPE = 0.5
+ATTACK = 0.5
+DYING = 0.5
