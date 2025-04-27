@@ -32,8 +32,7 @@ while running:
 			if event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_KP_ENTER or event.key == pygame.K_RETURN:
 					game_state = 'play'
-					game.reset_time()
-		game.intro_animation()
+		game.screen.blit(pygame.image.load(f'assets/bg/First-comics-001.png').convert_alpha(), (0, 0))
 	
 	elif game_state == 'play':
 
@@ -46,13 +45,11 @@ while running:
     
 		screen_scroll = game.hero.update(keys, game.world.obstacles, events, game.npc_group)
 		game.world.update(screen_scroll)
-		#game.npc.update(game.world.obstacles, game.hero, screen_scroll)
 		game.world.draw(game.surface)
 
 		for npc in game.npc_group:
-			npc.move(game.world.obstacles, screen_scroll)
+			npc.update(game.world.obstacles, screen_scroll)
 			npc.draw(game.surface)
-			npc.update()
 
 		game.hero.draw(game.surface)
 		
@@ -61,8 +58,8 @@ while running:
 		elapsed_time = (pygame.time.get_ticks() - game.game_time)
 		elapsed_time_seconds = elapsed_time // 1000
 
-		
-		time_display_text = game.time_font.render(f'Time: {abs(elapsed_time_seconds - constants.TIME_LIMIT_SECONDS)} s', True, (255, 255, 255))
+		font = pygame.font.Font(None, 36)
+		time_display_text = font.render(f'Time: {abs(elapsed_time_seconds - constants.TIME_LIMIT_SECONDS)} s', True, (255, 255, 255))
 		game.screen.blit(time_display_text, (0, 0))
 
 
@@ -73,8 +70,6 @@ while running:
 			game_state = 'win'
 
 		if elapsed_time > constants.TIME_LIMIT:
-			if game.npc_count(game.num_of_infected)[1]:
-				game_state = 'win'
 			game_state = 'time-up'
 
 		

@@ -206,17 +206,16 @@ class Npc(Character, pygame.sprite.Sprite):
         self.x = self.bigger_rect.x
         self.y = self.bigger_rect.y
         self.is_dead = False
-        self.movement = True
+        self.movement = False
         self.infected = infected
         self.last_move = pygame.time.get_ticks()
 
-        self.last_frame = pygame.time.get_ticks()
         self.frame = 0
         self.last_animation = pygame.time.get_ticks()
         self.animation_list = self.load_animation_list()
-        self.animation_time = False
         self.random_cooldown = random.randint(constants.ANIMATION_MIN_TIME, constants.ANIMATION_MAX_TIME)
-        self.actual_list = self.animation_list[1]
+        self.actual_list = self.animation_list[1][1]
+        self.animation_time = True
 
 
     def draw(self, screen):
@@ -232,13 +231,16 @@ class Npc(Character, pygame.sprite.Sprite):
         if self.now - self.last_move > random.randint(constants.ANIMATION_MIN_TIME, constants.ANIMATION_MAX_TIME):
             self.last_move = pygame.time.get_ticks()
 
-            random_move = random.randint(0, 1)
+            random_move = random.randint(0, 10)
             self.movement = random_move == 0
 
             self.direction = pygame.Vector2(0, 0)
             if random.randint(0, 1):
                 self.direction.x = random.choice([-1, 1])
-                self.flip = self.direction.x == -1
+                if self.direction.x == -1:
+                    self.flip = True
+                else:
+                    self.flip = False
             if random.randint(0, 1):
                 self.direction.y = random.choice([-1, 1])
 
@@ -275,7 +277,8 @@ class Npc(Character, pygame.sprite.Sprite):
         self.rect.center = (int(self.x), int(self.y))
 
 
-    def update(self):
+    def update(self, obstacles, screen_scroll):
+        self.move(obstacles, screen_scroll)
         self.get_animation()
         now = pygame.time.get_ticks()
         if self.movement:
@@ -335,27 +338,23 @@ class Npc(Character, pygame.sprite.Sprite):
 
         
     def get_animation(self):
-        self.now = pygame.time.get_ticks()
 
-        if self.walk == False:
-            self.last_animation = self.now
-            self.frame = 0
+        #if self.movement == False:
 
+        if self.animation_time:
             a = random.randint(0, 10)
             if self.infected and a > constants.INFECTED_COEFICIENT:
                 self.actual_list = self.animation_list[0][random.randint(0, len(self.animation_list[0]) - 1)]
             else:
                 self.actual_list = self.animation_list[1][random.randint(0, len(self.animation_list[1]) - 1)]
+            self.animation_time = False
 
-        if self.animation_time:
-            if self.now - self.last_frame > constants.NPC_ANIMATION:
-                self.last_frame = self.now
-
-                if self.frame < len(self.actual_list):
-                    self.img = self.actual_list[self.frame]
-                    self.frame += 1
-                else:
-                    self.frame = 0
-                    self.animation_time = False
-                    self.random_cooldown = random.randint(constants.ANIMATION_MIN_TIME, constants.ANIMATION_MAX_TIME)
-
+        now = pygame.time.get_ticks()
+        if now - self.last_animation > 200:
+            self.last_animation = pygame.time.get_ticks()
+            if self.frame >= len(self.actual_list):
+                self.frame = 0
+                self.animation_time = True
+                self.movement = True
+            self.img = self.actual_list[self.frame]
+            self.frame += 1
