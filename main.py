@@ -32,7 +32,7 @@ while running:
 			if event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_KP_ENTER or event.key == pygame.K_RETURN:
 					game_state = 'play'
-		game.screen.blit(pygame.image.load(f'assets/bg/First-comics-001.png').convert_alpha(), (0, 0))
+		game.intro_animation()
 	
 	elif game_state == 'play':
 
