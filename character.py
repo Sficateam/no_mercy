@@ -77,6 +77,7 @@ class Player(Character, pygame.sprite.Sprite):
         self.walk = self.animation_load([], path = 'assets/character/walk/Walking')
         self.fight = self.animation_load([], path = 'assets/character/attack/')
         self.last_animation = pygame.time.get_ticks()
+        self.last_attack = pygame.time.get_ticks()
         self.frame = 0
         self.walking = False
 
@@ -186,7 +187,7 @@ class Player(Character, pygame.sprite.Sprite):
     def attack(self, npc_group, sound):
         for npc in npc_group:
             if self.attacking and self.in_collision(npc.bigger_rect):
-
+                self.last_attack = pygame.time.get_ticks()
                 sound.play()
                 if npc.infected and not npc.is_dead:
                     Npc.count_infected += 1

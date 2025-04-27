@@ -62,10 +62,16 @@ while running:
 		
 
 		if game.npc_count(constants.NUMBER_OF_INFECTED_NPC)[0] == 1:
-			game_state = 'loose'
+			now = pygame.time.get_ticks()
+			if now - game.hero.last_attack > constants.LAST_DEATH_IN_GAME:
+				game.hero.last_attack = now	
+				game_state = 'loose'
 
 		if game.npc_count(constants.NUMBER_OF_INFECTED_NPC)[1]:
-			game_state = 'win'
+			now = pygame.time.get_ticks()
+			if now - game.hero.last_attack > constants.LAST_DEATH_IN_GAME:
+				game.hero.last_attack = now	
+				game_state = 'win'
 
 		if elapsed_time > constants.TIME_LIMIT:
 			game_state = 'time-up'
