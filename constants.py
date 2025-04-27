@@ -22,9 +22,22 @@ LAST_DEATH_IN_GAME = 2000
 
 #fonts
 TIME_TEXT_FONT_SIZE = 36
-INTRO_TEXT_FONT_SIZE = 60
+INTRO_TEXT_FONT_SIZE = 40
 TEXT_OUTLINE_THICKNESS = 4
-INTRO_SLIDES_TEXT = ['Merciii', 'Gimme', 'Nom Nom', 'Oh no', 'Hero is here to save you']
+INTRO_SLIDES_TEXT = ["In one great town, on one great afternoon...",
+                        "...a kind gentleman arrived with the best chocolates fare and wide",
+                        "A large crowd was attracted from all around, eager to taste at least one delicious chocolate.",
+                        "People snatched up chocolates by the dozens and still they hadn't enough.",
+                        "They were so… ",
+                        "...delicious.",
+                        "However…",
+                        "…very strange things started happening to some of them.",
+                        "And it wasn't nice at all",
+                        "But even in the darkest chocolate times, there's no need to lose a hope.",
+                        "One man from a crowd stood up and said…",
+                        "NO MERCI!",
+                        "(or „mercy“?)"
+                        ]
 
 
 #collisions

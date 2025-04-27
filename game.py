@@ -65,8 +65,8 @@ class Game():
     def intro_images_load(self):
         intro_images = []
 
-        for i in range(5):
-            img = pygame.image.load(f'assets/bg/intro/First-comics-00{i + 1}.png').convert_alpha()
+        for i in range(13):
+            img = pygame.image.load(f'assets/bg/intro/{i + 1}.png').convert_alpha()
             intro_images.append(img)
         return intro_images
 
