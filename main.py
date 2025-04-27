@@ -11,7 +11,7 @@ pygame.init()
 game = Game()
 game.setup()
 
-game.sounds.play()
+game.sounds.play_backround()
 
 running = True
 game_state = 'start-komix'
@@ -32,6 +32,8 @@ while running:
 		game.intro_animation()
 	
 	elif game_state == 'play':
+
+		# game.sounds.play_anouc()
 
 		keys = pygame.key.get_pressed() 
 		

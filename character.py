@@ -366,13 +366,13 @@ class Npc(Character, pygame.sprite.Sprite):
                 index = random.randint(0, len(self.animation_list[1]) - 1)
                 self.actual_list = self.animation_list[1][index]
             self.animation_time = False
-        
-        if index > -1:
-            if len(sound_list[index]) > 0:
-                if index == 0 or index == 1:
-                    random_i = random.randint(0, len(sound_list[index]) - 1)
-                    sound = sound_list[index][random_i]
-                    sound.play()
+
+
+        if len(sound_list[index+1]) > 0:
+            if index == 1 or index == 2:
+                random_i = random.randint(0, len(sound_list[index]) - 1)
+                sound = sound_list[index][random_i]
+                sound.play()
 
         now = pygame.time.get_ticks()
         if now - self.last_animation > 200:
