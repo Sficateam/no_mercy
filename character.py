@@ -75,7 +75,7 @@ class Player(Character, pygame.sprite.Sprite):
         self.rect.center = (x, y)
         self.idle = self.animation_load([], path = 'assets/character/idle/wiggling')
         self.walk = self.animation_load([], path = 'assets/character/walk/Walking')
-        self.fight = self.animation_load([], path = 'assets/character/attack/Killing2-export')
+        self.fight = self.animation_load([], path = 'assets/character/attack/')
         self.last_animation = pygame.time.get_ticks()
         self.frame = 0
         self.walking = False
@@ -353,15 +353,21 @@ class Npc(Character, pygame.sprite.Sprite):
         
     def get_animation(self):
 
-        #if self.movement == False:
+        index = -1
 
         if self.animation_time:
             a = random.randint(0, 10)
+            index = 0
             if self.infected and a > constants.INFECTED_COEFICIENT:
-                self.actual_list = self.animation_list[0][random.randint(0, len(self.animation_list[0]) - 1)]
+                index = random.randint(0, len(self.animation_list[0]) - 1)
+                self.actual_list = self.animation_list[0][index]
             else:
-                self.actual_list = self.animation_list[1][random.randint(0, len(self.animation_list[1]) - 1)]
+                index = random.randint(0, len(self.animation_list[1]) - 1)
+                self.actual_list = self.animation_list[1][index]
             self.animation_time = False
+
+        # if index > 0:
+        #     sound_list[index].play()
 
         now = pygame.time.get_ticks()
         if now - self.last_animation > 200:

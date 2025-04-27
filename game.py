@@ -2,6 +2,7 @@ import pygame
 import character
 from world import World
 import constants
+from sounds import Sound
 
 class Game():
     def __init__(self):
@@ -21,7 +22,10 @@ class Game():
     def setup(self):
 
         self.world = World()
-        self.world.process_data()        
+        self.world.process_data() 
+
+        self.sounds = Sound()
+        self.sounds.process_data()       
 
         self.hero = character.Player(300, 300, 4)
 
