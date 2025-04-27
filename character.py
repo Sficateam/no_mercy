@@ -229,7 +229,7 @@ class Npc(Character, pygame.sprite.Sprite):
     def move(self, obstacle_list, screen_scroll):
         self.now = pygame.time.get_ticks()
 
-        if self.now - self.last_move > random.randint(500, 5000):
+        if self.now - self.last_move > random.randint(constants.ANIMATION_MIN_TIME, constants.ANIMATION_MAX_TIME):
             self.last_move = pygame.time.get_ticks()
 
             random_move = random.randint(0, 1)
@@ -337,10 +337,8 @@ class Npc(Character, pygame.sprite.Sprite):
     def get_animation(self):
         self.now = pygame.time.get_ticks()
 
-        if self.now - self.last_animation > self.random_cooldown:
+        if self.walk == False:
             self.last_animation = self.now
-            self.last_frame = self.now
-            self.animation_time = True
             self.frame = 0
 
             a = random.randint(0, 10)
