@@ -41,6 +41,8 @@ class Game():
             if npc.infected:
                 self.num_of_infected += 1
 
+                
+
 
         for npc in self.npc_group:
             print(npc.infected)
