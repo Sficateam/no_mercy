@@ -33,11 +33,14 @@ class Game():
                 self.num_of_infected += 1
             print(npc.infected)
 
+        for npc in self.npc_group:
+            print(npc.infected)
 
         self.screen_scroll = [0, 0]
         self.reset_time()
         character.Npc.count_infected = 0
         character.Npc.count_innocent = 0
+
 
 
     def npc_count(self, num_of_infected):
