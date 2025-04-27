@@ -59,11 +59,12 @@ while running:
 		time_display_text = font.render(f'Time: {abs(elapsed_time_seconds - constants.TIME_LIMIT_SECONDS)} s', True, (255, 255, 255))
 		game.screen.blit(time_display_text, (0, 0))
 
+		
 
-		if game.npc_count(game.num_of_infected)[0] == 1:
+		if game.npc_count(constants.NUMBER_OF_INFECTED_NPC)[0] == 1:
 			game_state = 'loose'
 
-		if game.npc_count(game.num_of_infected)[1]:
+		if game.npc_count(constants.NUMBER_OF_INFECTED_NPC)[1]:
 			game_state = 'win'
 
 		if elapsed_time > constants.TIME_LIMIT:
