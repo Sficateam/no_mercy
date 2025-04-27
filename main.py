@@ -61,13 +61,17 @@ while running:
 		time_display_text = font.render(f'Time: {abs(elapsed_time_seconds - constants.TIME_LIMIT_SECONDS)} s', True, (255, 255, 255))
 		game.screen.blit(time_display_text, (0, 0))
 
-		
-
 		if game.npc_count(constants.NUMBER_OF_INFECTED_NPC)[0] == 1:
-			game_state = 'loose'
+			now = pygame.time.get_ticks()
+			if now - game.hero.last_attack > constants.LAST_DEATH_IN_GAME:
+				game.hero.last_attack = now	
+				game_state = 'loose'
 
 		if game.npc_count(constants.NUMBER_OF_INFECTED_NPC)[1]:
-			game_state = 'win'
+			now = pygame.time.get_ticks()
+			if now - game.hero.last_attack > constants.LAST_DEATH_IN_GAME:
+				game.hero.last_attack = now	
+				game_state = 'win'
 
 		if elapsed_time > constants.TIME_LIMIT:
 			game_state = 'time-up'
