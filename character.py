@@ -22,11 +22,11 @@ class Character(ABC):
         pass
 
     def in_collision(self, object):
-        self.bigger_rect.x += 40
-        self.bigger_rect.width -= 80
-        temp = self.bigger_rect.colliderect(object)
-        self.bigger_rect.x -= 40
-        self.bigger_rect.width += 80
+        self.rect.x += constants.X_SHIFT
+        self.rect.width -= constants.WIDTH_SCALE
+        temp = self.rect.colliderect(object)
+        self.rect.x -= constants.X_SHIFT
+        self.rect.width += constants.WIDTH_SCALE
 
         return temp
     
@@ -101,14 +101,6 @@ class Player(Character, pygame.sprite.Sprite):
             if event.key == pygame.K_SPACE:
                 self.attacking = False
 
-    def in_collision(self, object):
-        self.rect.x += 40
-        self.rect.width -= 80
-        temp = self.rect.colliderect(object)
-        self.rect.x -= 40
-        self.rect.width += 80
-
-        return temp
     
     def move(self, obstacle_list, npc_group):
         screen_scroll = [0, 0]
@@ -225,7 +217,7 @@ class Npc(Character, pygame.sprite.Sprite):
         self.last_animation = pygame.time.get_ticks()
         self.animation_list = self.load_animation_list()
         self.animation_time = False
-        self.random_cooldown = 1500#random.randint(1000, 2000)
+        self.random_cooldown = random.randint(constants.ANIMATION_MIN_TIME, constants.ANIMATION_MAX_TIME)
         self.actual_list = self.animation_list[1]
 
 
@@ -367,20 +359,18 @@ class Npc(Character, pygame.sprite.Sprite):
     def get_animation(self):
         self.now = pygame.time.get_ticks()
 
-        # Začít novou animaci
         if self.now - self.last_animation > self.random_cooldown:
             self.last_animation = self.now
             self.last_frame = self.now
             self.animation_time = True
             self.frame = 0
 
-            # Vyberte správný seznam animací
-            if self.infected:
+            a = random.randint(0, 10)
+            if self.infected and a > constants.INFECTED_COEFICIENT:
                 self.actual_list = self.animation_list[0][random.randint(0, len(self.animation_list[0]) - 1)]
             else:
                 self.actual_list = self.animation_list[1][random.randint(0, len(self.animation_list[1]) - 1)]
 
-        # Přehrávat animaci
         if self.animation_time:
             if self.now - self.last_frame > constants.NPC_ANIMATION:
                 self.last_frame = self.now
@@ -391,5 +381,5 @@ class Npc(Character, pygame.sprite.Sprite):
                 else:
                     self.frame = 0
                     self.animation_time = False
-                    self.random_cooldown = random.randint(500, 1000)
+                    self.random_cooldown = random.randint(constants.ANIMATION_MIN_TIME, constants.ANIMATION_MAX_TIME)
 
