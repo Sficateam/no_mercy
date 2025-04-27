@@ -44,6 +44,15 @@ class Character(ABC):
             
 
         return list
+    
+    def do_animation(self, animation_list, cooldown):
+        now = pygame.time.get_ticks()
+        if now - self.last_animation > cooldown:
+            self.last_animation = pygame.time.get_ticks()
+            if self.frame >= len(animation_list):
+                self.frame = 0
+            self.img = animation_list[self.frame]
+            self.frame += 1
 
 
 class Player(Character, pygame.sprite.Sprite):
@@ -153,28 +162,12 @@ class Player(Character, pygame.sprite.Sprite):
         now = pygame.time.get_ticks()
 
         if self.attacking:
-            if now - self.last_animation > 80:
-                self.last_animation = pygame.time.get_ticks()
-                if self.frame >= len(self.fight):
-                    self.frame = 0
-                self.img = self.fight[self.frame]
-                self.frame += 1
+            self.do_animation(self.fight, constants.ATTACK_COOLDOWN)
 
         if self.walking:
-            if now - self.last_animation > 150:    
-                self.last_animation = pygame.time.get_ticks()
-                if self.frame >= len(self.walk):
-                    self.frame = 0
-                self.img = self.walk[self.frame]
-                self.frame += 1
+            self.do_animation(self.walk, constants.MOVE_COOLDOWN)
 
-        else:
-            if now - self.last_animation > 150:
-                self.last_animation = pygame.time.get_ticks()
-                if self.frame >= len(self.idle):
-                    self.frame = 0
-                self.img = self.idle[self.frame]
-                self.frame += 1
+        self.do_animation(self.idle, constants.IDDLE_COOLDOWN)
 
     
     def update(self, keys, obstacle_list, events, npc):
@@ -231,7 +224,7 @@ class Npc(Character, pygame.sprite.Sprite):
         self.frame = 0
         self.last_animation = pygame.time.get_ticks()
         self.animation_list = self.load_animation_list()
-        self.animation_unfinished = False
+        self.animation_time = False
         self.random_cooldown = 1500#random.randint(1000, 2000)
         self.actual_list = self.animation_list[1]
 
@@ -378,28 +371,38 @@ class Npc(Character, pygame.sprite.Sprite):
         if self.now - self.last_animation > self.random_cooldown:
             self.last_animation = self.now
             self.last_frame = self.now
-            self.animation_unfinished = True
+            self.animation_time = True
             self.frame = 0
 
-
-            index = random.randint(4, 6)
             a = random.randint(0,1000)
             if self.infected:
                 self.actual_list = self.animation_list[1][random.randint(3, 5)]
             else:
                 self.actual_list = self.animation_list[1][random.randint(0, 2)]
 
-        # Přehrávat animaci
-        if self.animation_unfinished:
-            if self.now - self.last_frame > 60:
-                self.last_frame = self.now
 
-                if self.frame < len(self.actual_list):
-                    self.img = self.actual_list[self.frame]
-                    self.frame += 1
-                else:
-                    self.animation_unfinished = False
+            now = pygame.time.get_ticks()
+            if now - self.last_animation > constants.NPC_ANIMATION:
+                self.last_animation = pygame.time.get_ticks()
+                if self.frame >= len(self.actual_list):
+                    self.frame = 0
+                    self.animation_time = False
                     self.img = pygame.image.load(f'assets/character/npc/1/Walking1.png').convert_alpha()
                     self.random_cooldown = 1500#random.randint(500, 1000)
+                self.img = self.actual_list[self.frame]
+                self.frame += 1
+
+        # Přehrávat animaci
+        # if self.animation_unfinished:
+        #     if self.now - self.last_frame > 60:
+        #         self.last_frame = self.now
+
+        #         if self.frame < len(self.actual_list):
+        #             self.img = self.actual_list[self.frame]
+        #             self.frame += 1
+        #         else:
+        #             self.animation_unfinished = False
+        #             self.img = pygame.image.load(f'assets/character/npc/1/Walking1.png').convert_alpha()
+        #             self.random_cooldown = 1500#random.randint(500, 1000)
 
             
