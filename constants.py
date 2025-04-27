@@ -31,3 +31,6 @@ WIDTH_SCALE = 80
 COUCHE = 1
 EAT = 2
 HAPPY = 3
+
+#sound cooldown
+ANOUC = 200
