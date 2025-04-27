@@ -37,9 +37,9 @@ while running:
 
 		keys = pygame.key.get_pressed() 
 		
-		game.screen.fill((80,145,166))
+		game.screen.fill((128,128,128))
 		game.screen.blit(game.surface, (0, 0))
-		game.surface.fill((110,190,66)) 
+		game.surface.fill((128,128,128)) 
 
     
 		screen_scroll = game.hero.update(keys, game.world.obstacles, events, game.npc_group)
