@@ -239,7 +239,7 @@ class Npc(Character, pygame.sprite.Sprite):
                 self.direction.x = random.choice([-1, 1])
                 if self.direction.x == -1:
                     self.flip = True
-                else:
+                elif self.direction.x == 1:
                     self.flip = False
             if random.randint(0, 1):
                 self.direction.y = random.choice([-1, 1])
