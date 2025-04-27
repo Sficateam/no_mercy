@@ -62,7 +62,7 @@ while running:
 		elapsed_time_seconds = elapsed_time // 1000
 
 		
-		time_display_text = game.font.render(f'Time: {abs(elapsed_time_seconds - constants.TIME_LIMIT_SECONDS)} s', True, (255, 255, 255))
+		time_display_text = game.time_font.render(f'Time: {abs(elapsed_time_seconds - constants.TIME_LIMIT_SECONDS)} s', True, (255, 255, 255))
 		game.screen.blit(time_display_text, (0, 0))
 
 
