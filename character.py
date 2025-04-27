@@ -197,7 +197,7 @@ class Npc(Character, pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.type = type
         self.img = pygame.image.load(f'assets/character/npc/{self.type}/Walking1.png').convert_alpha()
-        self.img_death = pygame.image.load(f'assets/world/shroom1.png').convert_alpha()
+        # self.img_death = pygame.image.load(f'assets/world/shroom1.png').convert_alpha()
         self.walk = self.animation_load([], path = f'assets/character/npc/{self.type}/Walking')
         self.flip = False
         self.direction = pygame.Vector2(0, 0)
