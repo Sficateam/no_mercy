@@ -217,7 +217,7 @@ class Npc(Character, pygame.sprite.Sprite):
         self.y = self.bigger_rect.y
         self.is_dead = False
         self.movement = True
-        self.infected = self.get_virus()
+        self.infected = True
         self.last_move = pygame.time.get_ticks()
 
         self.last_frame = pygame.time.get_ticks()
@@ -225,7 +225,7 @@ class Npc(Character, pygame.sprite.Sprite):
         self.last_animation = pygame.time.get_ticks()
         self.animation_list = self.load_animation_list()
         self.animation_time = False
-        self.random_cooldown = 1500#random.randint(1000, 2000)
+        self.random_cooldown = 2200#random.randint(1000, 2000)
         self.actual_list = self.animation_list[1]
 
 
@@ -374,35 +374,22 @@ class Npc(Character, pygame.sprite.Sprite):
             self.animation_time = True
             self.frame = 0
 
-            a = random.randint(0,1000)
+            # Vyberte správný seznam animací
             if self.infected:
-                self.actual_list = self.animation_list[1][random.randint(3, 5)]
+                self.actual_list = self.animation_list[0][random.randint(0, len(self.animation_list[0]) - 1)]
             else:
-                self.actual_list = self.animation_list[1][random.randint(0, 2)]
-
-
-            now = pygame.time.get_ticks()
-            if now - self.last_animation > constants.NPC_ANIMATION:
-                self.last_animation = pygame.time.get_ticks()
-                if self.frame >= len(self.actual_list):
-                    self.frame = 0
-                    self.animation_time = False
-                    self.img = pygame.image.load(f'assets/character/npc/1/Walking1.png').convert_alpha()
-                    self.random_cooldown = 1500#random.randint(500, 1000)
-                self.img = self.actual_list[self.frame]
-                self.frame += 1
+                self.actual_list = self.animation_list[1][random.randint(0, len(self.animation_list[1]) - 1)]
 
         # Přehrávat animaci
-        # if self.animation_unfinished:
-        #     if self.now - self.last_frame > 60:
-        #         self.last_frame = self.now
+        if self.animation_time:
+            if self.now - self.last_frame > constants.NPC_ANIMATION:
+                self.last_frame = self.now
 
-        #         if self.frame < len(self.actual_list):
-        #             self.img = self.actual_list[self.frame]
-        #             self.frame += 1
-        #         else:
-        #             self.animation_unfinished = False
-        #             self.img = pygame.image.load(f'assets/character/npc/1/Walking1.png').convert_alpha()
-        #             self.random_cooldown = 1500#random.randint(500, 1000)
+                if self.frame < len(self.actual_list):
+                    self.img = self.actual_list[self.frame]
+                    self.frame += 1
+                else:
+                    self.frame = 0
+                    self.animation_time = False
+                    self.random_cooldown = 2200
 
-            
