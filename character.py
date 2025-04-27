@@ -83,7 +83,6 @@ class Player(Character, pygame.sprite.Sprite):
 
     def draw(self, screen):
         screen.blit(pygame.transform.flip(self.img, self.flip, False), self.rect)
-        pygame.draw.rect(screen, (255, 0, 0), self.rect, 2)
 
     def input_keys(self, keys):
         self.direction.x = 0
@@ -229,7 +228,6 @@ class Npc(Character, pygame.sprite.Sprite):
 
     def draw(self, screen):
         screen.blit(pygame.transform.flip(self.img, self.flip, False), self.bigger_rect)
-        pygame.draw.rect(screen, (255, 0, 0), self.bigger_rect, 2)
 
     def move(self, obstacle_list, screen_scroll):
         self.now = pygame.time.get_ticks()
