@@ -34,15 +34,16 @@ class Game():
         for i in range(constants.NUMBER_OF_INFECTED_NPC):
             npc = character.Npc(2, self.world.positions, 1, True)
             self.npc_group.add(npc)
+            npc2 = character.Npc(2, self.world.positions, 2, True)
+            self.npc_group.add(npc2)
 
 
         for i in range(constants.NUMBER_OF_HEALTHY_NPC):
             npc = character.Npc(2, self.world.positions, 1, False)
             self.npc_group.add(npc)
+            npc2 = character.Npc(2, self.world.positions, 2, False)
+            self.npc_group.add(npc2)
 
-
-        for npc in self.npc_group:
-            print(npc.death)
 
         self.screen_scroll = [0, 0]
         self.reset_time()
@@ -55,7 +56,6 @@ class Game():
         all_infected_killed = (num_of_infected == character.Npc.count_infected)
         if num_of_infected == 0:
             all_infected_killed = False
-        print(character.Npc.count_innocent, all_infected_killed)
         return character.Npc.count_innocent, all_infected_killed
     
     
@@ -72,7 +72,7 @@ class Game():
 
     def intro_animation(self):
         now = pygame.time.get_ticks()
-        frame_time = 3000
+        frame_time = constants.INTRO_ANIMATION_FRAME_TIME
 
         if now - self.last_frame > frame_time:
             self.last_frame = now

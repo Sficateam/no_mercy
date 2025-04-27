@@ -190,7 +190,6 @@ class Player(Character, pygame.sprite.Sprite):
                 sound.play()
                 if npc.infected and not npc.is_dead:
                     Npc.count_infected += 1
-                    print('infected kill +1')
                 elif not npc.infected and not npc.is_dead:
                     Npc.count_innocent += 1             
                 npc.is_dead = True
