@@ -31,9 +31,8 @@ class Game():
             self.npc_group.add(npc)
             if npc.infected:
                 self.num_of_infected += 1
+            print(npc.infected)
 
-        for npc in self.npc_group:
-            print(len((npc.animation_list[0])))
 
         self.screen_scroll = [0, 0]
         self.reset_time()

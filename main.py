@@ -28,13 +28,12 @@ while running:
 			running = False
 
 	if game_state == 'start-komix':
-		print(game.game_time)
 		for event in events:
 			if event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_KP_ENTER or event.key == pygame.K_RETURN:
 					game_state = 'play'
 					game.reset_time()
-		# game.intro_animation()
+		game.intro_animation()
 	
 	elif game_state == 'play':
 

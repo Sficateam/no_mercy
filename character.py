@@ -229,7 +229,7 @@ class Npc(Character, pygame.sprite.Sprite):
         self.last_animation = pygame.time.get_ticks()
         self.animation_list = self.load_animation_list()
         self.animation_unfinished = False
-        self.random_cooldown = random.randint(3000, 7000)
+        self.random_cooldown = random.randint(500, 1000)
         self.actual_list = self.animation_list[0]
 
 
@@ -390,7 +390,7 @@ class Npc(Character, pygame.sprite.Sprite):
             self.animation_unfinished = True
             self.frame = 0
 
-            if self.infected and random.randint(0, 10) > 2:
+            if self.infected: # and random.randint(0, 100) > 2:
                 self.actual_list = self.animation_list[0][random.randint(0, len(self.animation_list[0]) - 1)]
             else:
                 self.actual_list = self.animation_list[1][random.randint(0, len(self.animation_list[1]) - 1)]
@@ -406,6 +406,6 @@ class Npc(Character, pygame.sprite.Sprite):
                 else:
                     self.animation_unfinished = False
                     self.img = pygame.image.load(f'assets/character/npc/1/Walking1.png').convert_alpha()
-                    self.random_cooldown = random.randint(3000, 7000)
+                    self.random_cooldown = random.randint(500, 1000)
 
             
