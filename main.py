@@ -33,7 +33,7 @@ while running:
 	
 	elif game_state == 'play':
 
-		# game.sounds.play_anouc()
+		game.sounds.play_anouc()
 
 		keys = pygame.key.get_pressed() 
 		
