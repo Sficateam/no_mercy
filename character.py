@@ -51,6 +51,15 @@ class Character(ABC):
             self.img = animation_list[self.frame]
             self.frame += 1
 
+    def do_animation_once(self, animation_list, cooldown):
+        now = pygame.time.get_ticks()
+        if now - self.last_animation > cooldown:
+            self.last_animation = pygame.time.get_ticks()
+            if self.frame >= len(animation_list):
+                self.frame = len(animation_list) - 1
+            self.img = animation_list[self.frame]
+            self.frame += 1
+
 
 class Player(Character, pygame.sprite.Sprite):
     def __init__(self, x, y, speed):
@@ -179,9 +188,10 @@ class Player(Character, pygame.sprite.Sprite):
             if self.attacking and self.in_collision(npc.bigger_rect):
 
                 sound.play()
-                if npc.infected:
+                if npc.infected and not npc.is_dead:
                     Npc.count_infected += 1
-                else:
+                    print('infected kill +1')
+                elif not npc.infected and not npc.is_dead:
                     Npc.count_innocent += 1             
                 npc.is_dead = True
                 
@@ -199,6 +209,7 @@ class Npc(Character, pygame.sprite.Sprite):
         self.img = pygame.image.load(f'assets/character/npc/{self.type}/Walking1.png').convert_alpha()
         # self.img_death = pygame.image.load(f'assets/world/shroom1.png').convert_alpha()
         self.walk = self.animation_load([], path = f'assets/character/npc/{self.type}/Walking')
+        self.death = self.animation_load([], path = f'assets/character/npc/{self.type}/death/healthy/')
         self.flip = False
         self.direction = pygame.Vector2(0, 0)
         self.rect = self.get_random_rect(position_list)
@@ -209,7 +220,6 @@ class Npc(Character, pygame.sprite.Sprite):
         self.movement = False
         self.infected = infected
         self.last_move = pygame.time.get_ticks()
-
         self.frame = 0
         self.last_animation = pygame.time.get_ticks()
         self.animation_list = self.load_animation_list()
@@ -219,11 +229,11 @@ class Npc(Character, pygame.sprite.Sprite):
 
 
     def draw(self, screen):
-        if self.is_dead:
-            screen.blit(pygame.transform.flip(self.img_death, False, False), self.bigger_rect)
-        else:
-            screen.blit(pygame.transform.flip(self.img, self.flip, False), self.bigger_rect)
-            pygame.draw.rect(screen, (255, 0, 0), self.bigger_rect, 2)
+        # if self.is_dead:
+        #     self.do_animation()
+        # else:
+        screen.blit(pygame.transform.flip(self.img, self.flip, False), self.bigger_rect)
+        pygame.draw.rect(screen, (255, 0, 0), self.bigger_rect, 2)
 
     def move(self, obstacle_list, screen_scroll):
         self.now = pygame.time.get_ticks()
@@ -232,7 +242,10 @@ class Npc(Character, pygame.sprite.Sprite):
             self.last_move = pygame.time.get_ticks()
 
             random_move = random.randint(0, 10)
-            self.movement = random_move == 0
+            if self.is_dead:
+                self.movement = False
+            else:
+                self.movement = random_move == 0
 
             self.direction = pygame.Vector2(0, 0)
             if random.randint(0, 1):
@@ -289,7 +302,8 @@ class Npc(Character, pygame.sprite.Sprite):
                 self.img = self.walk[self.frame]
                 self.frame += 1
         if self.is_dead:
-            self.kill()
+            self.do_animation_once(self.death, constants.NPC_ANIMATION)
+            self.flip = False
 
     def get_postion(self, position_list):
         i = random.randint(0, len(position_list) - 1)
