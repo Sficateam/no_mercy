@@ -66,7 +66,7 @@ class Player(Character, pygame.sprite.Sprite):
         self.rect.center = (x, y)
         self.idle = self.animation_load([], path = 'assets/character/idle/wiggling')
         self.walk = self.animation_load([], path = 'assets/character/walk/Walking')
-        self.fight = self.animation_load([], path = 'assets/character/attack/Killing2-export')
+        self.fight = self.animation_load([], path = 'assets/character/attack/')
         self.last_animation = pygame.time.get_ticks()
         self.frame = 0
         self.walking = False
@@ -219,11 +219,11 @@ class Npc(Character, pygame.sprite.Sprite):
 
 
     def draw(self, screen):
-        if self.is_dead:
-            screen.blit(pygame.transform.flip(self.img_death, False, False), self.bigger_rect)
-        else:
-            screen.blit(pygame.transform.flip(self.img, self.flip, False), self.bigger_rect)
-            pygame.draw.rect(screen, (255, 0, 0), self.bigger_rect, 2)
+        # if self.is_dead:
+        #     screen.blit(pygame.transform.flip(self.img_death, False, False), self.bigger_rect)
+        # else:
+        screen.blit(pygame.transform.flip(self.img, self.flip, False), self.bigger_rect)
+        pygame.draw.rect(screen, (255, 0, 0), self.bigger_rect, 2)
 
     def move(self, obstacle_list, screen_scroll):
         self.now = pygame.time.get_ticks()
@@ -277,9 +277,9 @@ class Npc(Character, pygame.sprite.Sprite):
         self.rect.center = (int(self.x), int(self.y))
 
 
-    def update(self, obstacles, screen_scroll):
+    def update(self, obstacles, screen_scroll, sound_list):
         self.move(obstacles, screen_scroll)
-        self.get_animation()
+        self.get_animation(sound_list)
         now = pygame.time.get_ticks()
         if self.movement:
             if now - self.last_animation > 150:    
@@ -337,17 +337,23 @@ class Npc(Character, pygame.sprite.Sprite):
         return animation_list
 
         
-    def get_animation(self):
+    def get_animation(self, sound_list):
 
-        #if self.movement == False:
+        index = -1
 
         if self.animation_time:
             a = random.randint(0, 10)
+            index = 0
             if self.infected and a > constants.INFECTED_COEFICIENT:
-                self.actual_list = self.animation_list[0][random.randint(0, len(self.animation_list[0]) - 1)]
+                index = random.randint(0, len(self.animation_list[0]) - 1)
+                self.actual_list = self.animation_list[0][index]
             else:
-                self.actual_list = self.animation_list[1][random.randint(0, len(self.animation_list[1]) - 1)]
+                index = random.randint(0, len(self.animation_list[1]) - 1)
+                self.actual_list = self.animation_list[1][index]
             self.animation_time = False
+
+        if index > 0:
+            sound_list[index].play()
 
         now = pygame.time.get_ticks()
         if now - self.last_animation > 200:

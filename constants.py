@@ -27,3 +27,7 @@ INTRO_SLIDES_TEXT = ['Merciii', 'Gimme', 'Nom Nom', 'Oh no', 'Hero is here to sa
 #collisions
 X_SHIFT = 40
 WIDTH_SCALE = 80
+
+COUCHE = 1
+EAT = 2
+HAPPY = 3

@@ -14,6 +14,16 @@ game.setup()
 pygame.mixer.music.load("assets/audio/music.wav")
 pygame.mixer.music.set_volume(0.3)
 pygame.mixer.music.play(-1, 0.0, 5000)
+
+sound_list = []
+for i in range(3):
+	sound = pygame.mixer.Sound(f"assets/audio/{i+1}.mp3")
+	sound_list.append(sound)
+	sound.set_volume(0.5)
+
+
+
+
 hit_fx = pygame.mixer.Sound("assets/audio/hit.mp3")
 hit_fx.set_volume(0.5)
 
@@ -49,7 +59,7 @@ while running:
 		game.world.draw(game.surface)
 
 		for npc in game.npc_group:
-			npc.update(game.world.obstacles, screen_scroll)
+			npc.update(game.world.obstacles, screen_scroll, sound_list)
 			npc.draw(game.surface)
 
 		game.hero.draw(game.surface)
