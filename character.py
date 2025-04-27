@@ -31,7 +31,6 @@ class Character(ABC):
         return temp
     
     def animation_load(self, list, path):
-
         i = 1
         while True:
             filename = f'{path}{i}.png'
@@ -41,8 +40,6 @@ class Character(ABC):
                 i += 1
             else:
                 break
-            
-
         return list
     
     def do_animation(self, animation_list, cooldown):
@@ -195,21 +192,22 @@ class Npc(Character, pygame.sprite.Sprite):
     count_innocent = 0
     count_infected = 0
 
-    def __init__(self, speed, position_list):
+    def __init__(self, speed, position_list, type, infected):
         Character.__init__(self, speed)
         pygame.sprite.Sprite.__init__(self)
-        self.img = pygame.image.load(f'assets/character/npc/1/Walking1.png').convert_alpha()
+        self.type = type
+        self.img = pygame.image.load(f'assets/character/npc/{self.type}/Walking1.png').convert_alpha()
         self.img_death = pygame.image.load(f'assets/world/shroom1.png').convert_alpha()
-        self.walk = self.animation_load([], path = 'assets/character/npc/1/Walking')
+        self.walk = self.animation_load([], path = f'assets/character/npc/{self.type}/Walking')
         self.flip = False
         self.direction = pygame.Vector2(0, 0)
         self.rect = self.get_random_rect(position_list)
-        self.bigger_rect = self.rect.inflate(30, 30)
+        self.bigger_rect = self.rect.inflate(92, 92)
         self.x = self.bigger_rect.x
         self.y = self.bigger_rect.y
         self.is_dead = False
         self.movement = True
-        self.infected = True
+        self.infected = infected
         self.last_move = pygame.time.get_ticks()
 
         self.last_frame = pygame.time.get_ticks()
@@ -230,72 +228,52 @@ class Npc(Character, pygame.sprite.Sprite):
 
     def move(self, obstacle_list, screen_scroll):
         self.now = pygame.time.get_ticks()
-        random_move_list = [0, 0, 0, 0]
-        
+
         if self.now - self.last_move > random.randint(500, 5000):
             self.last_move = pygame.time.get_ticks()
 
-            random_move = random.randint(0,1)
-            if random_move == 0:
-                self.movement = True
-            else:
-                self.movement = False
+            random_move = random.randint(0, 1)
+            self.movement = random_move == 0
 
-            
-            for i in range(4):
-                random_move_list[i] = random.randint(0,1)
+            self.direction = pygame.Vector2(0, 0)
+            if random.randint(0, 1):
+                self.direction.x = random.choice([-1, 1])
+                self.flip = self.direction.x == -1
+            if random.randint(0, 1):
+                self.direction.y = random.choice([-1, 1])
 
         if self.movement:
-
             prev_x = self.x
             prev_y = self.y
-            
-            if random_move_list[0] == 1:
-                    self.direction.x = -1
-                    self.flip = True
-            if random_move_list[1] == 1:
-                    self.direction.x = 1
-                    self.flip = False
-            if random_move_list[2] == 1:
-                    self.direction.y = 1
-            if random_move_list[3] == 1:
-                    self.direction.y = -1
 
-            # Move in x direction        
             self.x += self.direction.x * self.speed
-            self.x += screen_scroll[0]
             self.bigger_rect.centerx = int(self.x)
+            self.rect.centerx = int(self.x)
+
             for tile in obstacle_list:
-                if self.bigger_rect.colliderect(tile):
-                    if self.direction.x > 0:
-                        self.x = prev_x
-                        self.rect.centerx = int(self.x)
-                    elif self.direction.x < 0:
-                        self.x = prev_x
-                        self.rect.centerx = int(self.x)
+                if self.in_collision(tile):
+                    self.x = prev_x
+                    self.bigger_rect.centerx = int(self.x)
+                    self.rect.centerx = int(self.x)
 
-
-            # Move in y direction
             self.y += self.direction.y * self.speed
-            self.y += screen_scroll[1]
             self.bigger_rect.centery = int(self.y)
+            self.rect.centery = int(self.y)
+
             for tile in obstacle_list:
-                if self.bigger_rect.colliderect(tile):
-                    if self.direction.y > 0:
-                        self.y = prev_y
-                        self.rect.centery = int(self.y)
-                    elif self.direction.y < 0:
-                        self.y = prev_y
-                        self.rect.centery = int(self.y)
+                if self.in_collision(tile):
+                    self.y = prev_y
+                    self.bigger_rect.centery = int(self.y)
+                    self.rect.centery = int(self.y)
 
             if self.direction.length_squared() > 0:
                 self.direction = self.direction.normalize()
 
-        else:
-            self.x += screen_scroll[0]
-            self.y += screen_scroll[1]
-            self.bigger_rect.centerx = int(self.x)
-            self.bigger_rect.centery = int(self.y)
+        self.x += screen_scroll[0]
+        self.y += screen_scroll[1]
+        self.bigger_rect.center = (int(self.x), int(self.y))
+        self.rect.center = (int(self.x), int(self.y))
+
 
     def update(self):
         self.get_animation()
@@ -333,21 +311,21 @@ class Npc(Character, pygame.sprite.Sprite):
         folders_healthy = 0
         folders_infected = 0
 
-        for entry in os.scandir('assets/character/npc/1/healthy'):
+        for entry in os.scandir(f'assets/character/npc/{self.type}/healthy'):
             if entry.is_dir():
                 folders_healthy += 1
         
-        for entry in os.scandir('assets/character/npc/1/infected'):
+        for entry in os.scandir(f'assets/character/npc/{self.type}/infected'):
             if entry.is_dir():
                 folders_infected += 1
 
         for i in range(folders_healthy):
-            list = self.animation_load([], f'assets/character/npc/1/healthy/{i+1}/')
+            list = self.animation_load([], f'assets/character/npc/{self.type}/healthy/{i+1}/')
             healthy.append(list)
 
 
         for i in range(folders_infected):
-            list = self.animation_load([], f'assets/character/npc/1/infected/{i+1}/')
+            list = self.animation_load([], f'assets/character/npc/{self.type}/infected/{i+1}/')
             infected.append(list)
 
         animation_list.append(infected)
