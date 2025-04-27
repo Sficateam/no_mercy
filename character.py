@@ -277,9 +277,9 @@ class Npc(Character, pygame.sprite.Sprite):
         self.rect.center = (int(self.x), int(self.y))
 
 
-    def update(self, obstacles, screen_scroll):
+    def update(self, obstacles, screen_scroll, sound_list):
         self.move(obstacles, screen_scroll)
-        self.get_animation()
+        self.get_animation(sound_list)
         now = pygame.time.get_ticks()
         if self.movement:
             if now - self.last_animation > 150:    
@@ -337,7 +337,7 @@ class Npc(Character, pygame.sprite.Sprite):
         return animation_list
 
         
-    def get_animation(self):
+    def get_animation(self, sound_list):
 
         index = -1
 
@@ -351,9 +351,13 @@ class Npc(Character, pygame.sprite.Sprite):
                 index = random.randint(0, len(self.animation_list[1]) - 1)
                 self.actual_list = self.animation_list[1][index]
             self.animation_time = False
-
-        # if index > 0:
-        #     sound_list[index].play()
+        
+        if index > -1:
+            if len(sound_list[index]) > 0:
+                if index == 0 or index == 1:
+                    random_i = random.randint(0, len(sound_list[index]) - 1)
+                    sound = sound_list[index][random_i]
+                    sound.play()
 
         now = pygame.time.get_ticks()
         if now - self.last_animation > 200:
