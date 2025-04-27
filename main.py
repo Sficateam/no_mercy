@@ -32,6 +32,7 @@ while running:
 			if event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_KP_ENTER or event.key == pygame.K_RETURN:
 					game_state = 'play'
+					game.reset_time()
 		game.intro_animation()
 	
 	elif game_state == 'play':
