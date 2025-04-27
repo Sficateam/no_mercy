@@ -207,9 +207,7 @@ class Npc(Character, pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.type = type
         self.img = pygame.image.load(f'assets/character/npc/{self.type}/Walking1.png').convert_alpha()
-        # self.img_death = pygame.image.load(f'assets/world/shroom1.png').convert_alpha()
         self.walk = self.animation_load([], path = f'assets/character/npc/{self.type}/Walking')
-        self.death = self.animation_load([], path = f'assets/character/npc/{self.type}/death/healthy/')
         self.flip = False
         self.direction = pygame.Vector2(0, 0)
         self.rect = self.get_random_rect(position_list)
@@ -219,6 +217,7 @@ class Npc(Character, pygame.sprite.Sprite):
         self.is_dead = False
         self.movement = False
         self.infected = infected
+        self.death = self.death_animation_load()
         self.last_move = pygame.time.get_ticks()
         self.frame = 0
         self.last_animation = pygame.time.get_ticks()
@@ -229,9 +228,6 @@ class Npc(Character, pygame.sprite.Sprite):
 
 
     def draw(self, screen):
-        # if self.is_dead:
-        #     self.do_animation()
-        # else:
         screen.blit(pygame.transform.flip(self.img, self.flip, False), self.bigger_rect)
         pygame.draw.rect(screen, (255, 0, 0), self.bigger_rect, 2)
 
@@ -302,7 +298,7 @@ class Npc(Character, pygame.sprite.Sprite):
                 self.img = self.walk[self.frame]
                 self.frame += 1
         if self.is_dead:
-            self.do_animation_once(self.death, constants.NPC_ANIMATION)
+            self.do_animation_once(self.death, constants.DEATH_COOLDOWN)
             self.flip = False
 
     def get_postion(self, position_list):
@@ -320,6 +316,12 @@ class Npc(Character, pygame.sprite.Sprite):
         else:
             return False
         
+    def death_animation_load(self):
+        if self.infected:
+            return self.animation_load([], path = f'assets/character/npc/{self.type}/death/infected/')
+        else:
+            return self.animation_load([], path = f'assets/character/npc/{self.type}/death/healthy/')
+    
     def load_animation_list(self):
         infected = []
         healthy = []
