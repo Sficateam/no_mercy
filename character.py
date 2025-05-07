@@ -80,35 +80,59 @@ class Player(Character, pygame.sprite.Sprite):
         self.last_attack = pygame.time.get_ticks()
         self.frame = 0
         self.walking = False
+        self.moving_up = False
+        self.moving_down = False
+        self.moving_right = False
+        self.moving_left = False
 
     def draw(self, screen):
         screen.blit(pygame.transform.flip(self.img, self.flip, False), self.rect)
 
-    def input_keys(self, keys):
-        self.direction.x = 0
-        self.direction.y = 0
-
-        if keys[pygame.K_a]:
-                self.direction.x = -1
-                self.flip = True
-        if keys[pygame.K_d]:
-                self.direction.x = 1
-                self.flip = False
-        if keys[pygame.K_s]:
-                self.direction.y = 1
-        if keys[pygame.K_w]:
-                self.direction.y = -1
 
     def input_event(self, event):
+
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 self.attacking = True
+            if event.key == pygame.K_a:
+                self.moving_left = True
+                self.flip = True 
+            if event.key == pygame.K_d:
+                self.moving_right = True
+                self.flip = False
+            if event.key == pygame.K_s:
+                self.moving_down = True
+            if event.key == pygame.K_w:
+                self.moving_up = True
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_SPACE:
                 self.attacking = False
+            if event.key == pygame.K_a:
+                self.moving_left = False
+            if event.key == pygame.K_d:
+                self.moving_right = False
+            if event.key == pygame.K_s:
+                self.moving_down = False
+            if event.key == pygame.K_w:
+                self.moving_up = False
 
+
+    def update_direction(self):
+        self.direction = pygame.Vector2(0, 0)
+
+        if self.moving_up:
+            self.direction.y = -1
+        if self.moving_down:
+            self.direction.y = 1
+        if self.moving_left:
+            self.direction.x = -1
+        if self.moving_right:
+            self.direction.x = 1
     
     def move(self, obstacle_list, npc_group):
+
+        self.update_direction()
+            
         screen_scroll = [0, 0]
         self.walking = False
 
@@ -133,11 +157,6 @@ class Player(Character, pygame.sprite.Sprite):
                 self.y = prev_y
                 self.rect.centery = int(self.y)
 
-        for npc in npc_group:
-            if self.in_collision(npc):
-                self.y = prev_y
-                self.rect.centery = int(self.y)
-
         if self.direction.length_squared() > 0:
             self.walking = True
             if self.rect.right > (constants.SCREEN_WIDTH - constants.SCROLL_THRESH):
@@ -157,7 +176,6 @@ class Player(Character, pygame.sprite.Sprite):
         return screen_scroll
     
     def update_animations(self):
-        now = pygame.time.get_ticks()
 
         if self.attacking:
             self.do_animation(self.fight, constants.ATTACK_COOLDOWN)
@@ -168,10 +186,9 @@ class Player(Character, pygame.sprite.Sprite):
         self.do_animation(self.idle, constants.IDDLE_COOLDOWN)
 
     
-    def update(self, keys, obstacle_list, events, npc):
+    def update(self, obstacle_list, events, npc):
 
         self.update_animations()
-        self.input_keys(keys)
 
         for event in events:
             self.input_event(event)

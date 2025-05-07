@@ -33,16 +33,14 @@ while running:
 	
 	elif game_state == 'play':
 
-		game.sounds.play_anouc()
-
-		keys = pygame.key.get_pressed() 
+		game.sounds.play_anouc() 
 		
 		game.screen.fill((128,128,128))
 		game.screen.blit(game.surface, (0, 0))
 		game.surface.fill((128,128,128)) 
 
     
-		screen_scroll = game.hero.update(keys, game.world.obstacles, events, game.npc_group)
+		screen_scroll = game.hero.update(game.world.obstacles, events, game.npc_group)
 		game.world.update(screen_scroll)
 		game.world.draw(game.surface)
 
