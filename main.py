@@ -40,12 +40,12 @@ while running:
 		game.surface.fill((128,128,128)) 
 
     
-		screen_scroll = game.hero.update(game.world.obstacles, events, game.npc_group)
-		game.world.update(screen_scroll)
-		game.world.draw(game.surface)
+		screen_scroll = game.hero.update(game.world1.obstacles, events, game.npc_group)
+		game.world1.update(screen_scroll)
+		game.world1.draw(game.surface)
 
 		for npc in game.npc_group:
-			npc.update(game.world.obstacles, screen_scroll, game.sounds.sound_list, game.sounds.dying)
+			npc.update(game.world1.obstacles, screen_scroll, game.sounds.sound_list, game.sounds.dying)
 			npc.draw(game.surface)
 
 		game.hero.draw(game.surface)

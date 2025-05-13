@@ -278,23 +278,20 @@ class Npc(Character, pygame.sprite.Sprite):
 
             self.x += self.direction.x * self.speed
             self.rect.centerx = int(self.x)
-            # self.rect.centerx = int(self.x)
 
             for tile in obstacle_list:
                 if self.in_collision(tile):
                     self.x = prev_x
                     self.rect.centerx = int(self.x)
-                    # self.rect.centerx = int(self.x)
+                    self.movement = False
 
             self.y += self.direction.y * self.speed
             self.rect.centery = int(self.y)
-            # self.rect.centery = int(self.y)
 
             for tile in obstacle_list:
                 if self.in_collision(tile):
                     self.y = prev_y
                     self.rect.centery = int(self.y)
-                    # self.rect.centery = int(self.y)
 
             if self.direction.length_squared() > 0:
                 self.direction = self.direction.normalize()
@@ -302,7 +299,6 @@ class Npc(Character, pygame.sprite.Sprite):
         self.x += screen_scroll[0]
         self.y += screen_scroll[1]
         self.rect.center = (int(self.x), int(self.y))
-        # self.rect.center = (int(self.x), int(self.y))
 
 
     def update(self, obstacles, screen_scroll, sound_list, death_sound_list):
