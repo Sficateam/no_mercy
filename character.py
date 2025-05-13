@@ -203,7 +203,7 @@ class Player(Character, pygame.sprite.Sprite):
     
     def attack(self, npc_group, sound):
         for npc in npc_group:
-            if self.attacking and self.in_collision(npc.bigger_rect):
+            if self.attacking and self.in_collision(npc.rect):
                 self.last_attack = pygame.time.get_ticks()
                 sound.play()
                 if npc.infected and not npc.is_dead:
@@ -227,10 +227,10 @@ class Npc(Character, pygame.sprite.Sprite):
         self.walk = self.animation_load([], path = f'assets/character/npc/{self.type}/Walking')
         self.flip = False
         self.direction = pygame.Vector2(0, 0)
-        self.rect = self.get_random_rect(position_list)
-        self.bigger_rect = self.rect
-        self.x = self.bigger_rect.x
-        self.y = self.bigger_rect.y
+        self.rect_for_position = self.get_random_rect(position_list)
+        self.rect = self.img.get_rect()
+        self.x = self.rect_for_position.x
+        self.y = self.rect_for_position.y
         self.is_dead = False
         self.movement = False
         self.infected = infected
@@ -246,7 +246,9 @@ class Npc(Character, pygame.sprite.Sprite):
 
 
     def draw(self, screen):
-        screen.blit(pygame.transform.flip(self.img, self.flip, False), self.bigger_rect)
+        screen.blit(pygame.transform.flip(self.img, self.flip, False), self.rect)
+        pygame.draw.rect(screen, (255, 0, 0), self.rect, 2)
+        pygame.draw.rect(screen, (0, 255, 0), self.rect, 2)
 
     def move(self, obstacle_list, screen_scroll):
         self.now = pygame.time.get_ticks()
@@ -275,23 +277,20 @@ class Npc(Character, pygame.sprite.Sprite):
             prev_y = self.y
 
             self.x += self.direction.x * self.speed
-            self.bigger_rect.centerx = int(self.x)
             self.rect.centerx = int(self.x)
 
             for tile in obstacle_list:
                 if self.in_collision(tile):
                     self.x = prev_x
-                    self.bigger_rect.centerx = int(self.x)
                     self.rect.centerx = int(self.x)
+                    self.movement = False
 
             self.y += self.direction.y * self.speed
-            self.bigger_rect.centery = int(self.y)
             self.rect.centery = int(self.y)
 
             for tile in obstacle_list:
                 if self.in_collision(tile):
                     self.y = prev_y
-                    self.bigger_rect.centery = int(self.y)
                     self.rect.centery = int(self.y)
 
             if self.direction.length_squared() > 0:
@@ -299,7 +298,6 @@ class Npc(Character, pygame.sprite.Sprite):
 
         self.x += screen_scroll[0]
         self.y += screen_scroll[1]
-        self.bigger_rect.center = (int(self.x), int(self.y))
         self.rect.center = (int(self.x), int(self.y))
 
 

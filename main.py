@@ -15,7 +15,7 @@ game.sounds.play_backround()
 
 running = True
 game_state = 'start-komix'
-level = 'Store1'
+level = 'level1'
 
 while running:
 	events = pygame.event.get()
