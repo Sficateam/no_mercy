@@ -54,7 +54,7 @@ class Game():
 
     def npc_count(self, num_of_infected):
         all_infected_killed = (num_of_infected * 2 == character.Npc.count_infected)
-        one_innocent_killed = character.Npc.count_innocent == 1
+        one_innocent_killed = character.Npc.count_innocent >= 1
         if num_of_infected == 0:
             all_infected_killed = False
         return one_innocent_killed, all_infected_killed
