@@ -87,9 +87,11 @@ while running:
 			game.sounds.play_sound(game.sounds.win)
 		if game_state == 'loose':
 			game.screen.blit(pygame.image.load(f'assets/bg/Kill-innocent.png').convert_alpha(), (0, 0))
+			game.draw_subtitles('GAME OVER')
 			game.sounds.play_sound(game.sounds.loose)
 		if game_state == 'time-up':
 			game.screen.blit(pygame.image.load(f'assets/bg/Time-over.png').convert_alpha(), (0, 0))
+			game.draw_subtitles('GAME OVER')
 			game.sounds.play_sound(game.sounds.escape)
 	game.clock.tick(constants.FPS) 
 	pygame.display.flip()
