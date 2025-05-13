@@ -129,7 +129,7 @@ class Player(Character, pygame.sprite.Sprite):
         if self.moving_right:
             self.direction.x = 1
     
-    def move(self, obstacle_list, npc_group):
+    def move(self, obstacle_list):
 
         self.update_direction()
             
@@ -198,7 +198,7 @@ class Player(Character, pygame.sprite.Sprite):
 
         if new_scroll:
             return new_scroll
-        return self.move(obstacle_list, npc)
+        return self.move(obstacle_list)
     
     def attack(self, npc_group, sound):
         for npc in npc_group:
@@ -208,7 +208,7 @@ class Player(Character, pygame.sprite.Sprite):
                 if npc.infected and not npc.is_dead:
                     Npc.count_infected += 1
                 elif not npc.infected and not npc.is_dead:
-                    Npc.count_innocent += 1             
+                    Npc.count_innocent += 1           
                 npc.is_dead = True
                 
 
