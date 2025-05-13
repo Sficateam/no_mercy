@@ -21,8 +21,11 @@ class Game():
 
     def setup(self):
 
-        self.world = World()
-        self.world.process_data() 
+        self.world1 = World('Store1')
+        self.world1.process_data() 
+
+        self.world2 = World('Store')
+        self.world1.process_data() 
 
         self.sounds = Sound()
         self.sounds.process_data()       
@@ -32,16 +35,16 @@ class Game():
         self.npc_group = pygame.sprite.Group()
 
         for i in range(constants.NUMBER_OF_INFECTED_NPC):
-            npc = character.Npc(2, self.world.positions, 1, True)
+            npc = character.Npc(2, self.world1.positions, 1, True)
             self.npc_group.add(npc)
-            npc2 = character.Npc(2, self.world.positions, 2, True)
+            npc2 = character.Npc(2, self.world1.positions, 2, True)
             self.npc_group.add(npc2)
 
 
         for i in range(constants.NUMBER_OF_HEALTHY_NPC):
-            npc = character.Npc(2, self.world.positions, 1, False)
+            npc = character.Npc(2, self.world1.positions, 1, False)
             self.npc_group.add(npc)
-            npc2 = character.Npc(2, self.world.positions, 2, False)
+            npc2 = character.Npc(2, self.world1.positions, 2, False)
             self.npc_group.add(npc2)
 
 

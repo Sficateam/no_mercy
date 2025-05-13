@@ -3,8 +3,8 @@ import pytmx
 
 
 class World():
-    def __init__(self):
-        self.map_tmx = pytmx.load_pygame('assets/world/Store1.tmx')
+    def __init__(self, map):
+        self.map_tmx = pytmx.load_pygame('assets/world/{map}.tmx')
         self.tile_images = []        
         self.obstacles = []
         self.positions = []
