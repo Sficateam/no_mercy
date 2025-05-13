@@ -254,21 +254,19 @@ class Npc(Character, pygame.sprite.Sprite):
         if self.now - self.last_move > self.random_cooldown:
             self.last_move = pygame.time.get_ticks()
 
-            random_move = random.randint(0, 10)
+            random_move = random.randint(1, 100)
             if self.is_dead:
                 self.movement = False
             else:
                 self.movement = random_move > 0
 
             self.direction = pygame.Vector2(0, 0)
-            self.direction.x = random.randint(-1, 1)
-            self.direction.y = random.randint(-1, 1)
+            self.direction.x = random.choice([-1, 1])
+            self.direction.y = random.choice([-1, 1])
             if self.direction.x == -1:
                 self.flip = True
             elif self.direction.x == 1:
                 self.flip = False
-            if self.direction.x == 0 and self.direction.y == 0:
-                self.movement = False
 
             self.random_cooldown = random.randint(constants.ANIMATION_MIN_TIME, constants.ANIMATION_MAX_TIME)
 
