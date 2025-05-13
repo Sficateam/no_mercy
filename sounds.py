@@ -16,6 +16,7 @@ class Sound():
         self.time = pygame.time.get_ticks()
         self.cooldown = constants.ANOUC_COOLDOWN
         self.sound_list = []
+        self.unplayed = True
 
     def process_data(self):
         pygame.mixer.init()
@@ -32,18 +33,18 @@ class Sound():
           self.dying.append(sound)
           sound.set_volume(constants.DYING)
 
-          self.attack.set_volume(0.3)
-          self.escape.set_volume(0.3)
-          self.win.set_volume(0.3)
-          self.loose.set_volume(0.2)
+        
+          self.attack.set_volume(constants.ATTACK)
+          self.escape.set_volume(constants.ESCAPE)
+          self.win.set_volume(constants.WIN)
+          self.loose.set_volume(constants.LOOSE)
 
           self.sound_list.append(self.cough)
           self.sound_list.append(self.eating)
 
-
     def play_backround(self):
         pygame.mixer.music.load("assets/audio/backround/backround.mp3")
-        pygame.mixer.music.set_volume(2.0)
+        pygame.mixer.music.set_volume(constants.BACKROUND)
         pygame.mixer.music.play(-1, 0.0, 5000)
 
 
@@ -52,5 +53,10 @@ class Sound():
         # pokud cooldown uplynul a zvuk nehraje
         if now - self.time > self.cooldown and self.anouc.get_num_channels() == 0:
             self.time = now
-            self.anouc.set_volume(0.8)
+            self.anouc.set_volume(constants.ANOUC)
             self.anouc.play()
+
+    def play_sound(self, sound):
+        if self.unplayed:
+            sound.play()
+            self.unplayed = False
