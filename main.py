@@ -45,7 +45,7 @@ while running:
 		game.world.draw(game.surface)
 
 		for npc in game.npc_group:
-			npc.update(game.world.obstacles, screen_scroll, game.sounds.sound_list)
+			npc.update(game.world.obstacles, screen_scroll, game.sounds.sound_list, game.sounds.dying)
 			npc.draw(game.surface)
 
 		game.hero.draw(game.surface)
@@ -84,14 +84,13 @@ while running:
 										
 		if game_state == 'win':
 			game.screen.blit(pygame.image.load(f'assets/bg/Ending-win.png').convert_alpha(), (0, 0))
-			game.sounds.win.play()
+			game.sounds.play_sound(game.sounds.win)
 		if game_state == 'loose':
 			game.screen.blit(pygame.image.load(f'assets/bg/Kill-innocent.png').convert_alpha(), (0, 0))
-			game.sounds.loose.play()
+			game.sounds.play_sound(game.sounds.loose)
 		if game_state == 'time-up':
 			game.screen.blit(pygame.image.load(f'assets/bg/Time-over.png').convert_alpha(), (0, 0))
-			game.sounds.escape.play()	
-
+			game.sounds.play_sound(game.sounds.escape)
 	game.clock.tick(constants.FPS) 
 	pygame.display.flip()
 

@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 import constants
 import random
 import os
+import threading
 
 class Character(ABC):
     def __init__(self, speed):
@@ -234,6 +235,7 @@ class Npc(Character, pygame.sprite.Sprite):
         self.movement = False
         self.infected = infected
         self.death = self.death_animation_load()
+        self.death_sound_unplayed = True
         self.last_move = pygame.time.get_ticks()
         self.frame = 0
         self.last_animation = pygame.time.get_ticks()
@@ -301,7 +303,7 @@ class Npc(Character, pygame.sprite.Sprite):
         self.rect.center = (int(self.x), int(self.y))
 
 
-    def update(self, obstacles, screen_scroll, sound_list):
+    def update(self, obstacles, screen_scroll, sound_list, death_sound_list):
         self.move(obstacles, screen_scroll)
         self.get_animation(sound_list)
         now = pygame.time.get_ticks()
@@ -315,6 +317,10 @@ class Npc(Character, pygame.sprite.Sprite):
         if self.is_dead:
             self.do_animation_once(self.death, constants.DEATH_COOLDOWN)
             self.flip = False
+            if self.death_sound_unplayed:
+                sound = death_sound_list[random.randint(0, len(death_sound_list) -1)]
+                threading.Timer(0.3, sound.play).start()
+                self.death_sound_unplayed = False
 
     def get_postion(self, position_list):
         i = random.randint(0, len(position_list) - 1)
