@@ -24,7 +24,7 @@ class Game():
         self.world1 = World('level1')
         self.world1.process_data() 
 
-        self.world2 = World('Store')
+        self.world2 = World('Store1')
         self.world1.process_data() 
 
         self.sounds = Sound()
