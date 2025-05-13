@@ -22,7 +22,9 @@ You can download a standalone version of the game directly from Itch.io:
 2. Install dependencies:
    ```bash
    pip install -r requirements.txt
-
+3. Run the game:
+   ```bash
+   python main.py
 
 ## 🧩 Controls
 
