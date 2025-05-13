@@ -232,7 +232,7 @@ class Npc(Character, pygame.sprite.Sprite):
         self.x = self.rect_for_position.x
         self.y = self.rect_for_position.y
         self.is_dead = False
-        self.movement = False
+        self.movement = True
         self.infected = infected
         self.death = self.death_animation_load()
         self.death_sound_unplayed = True
@@ -240,39 +240,40 @@ class Npc(Character, pygame.sprite.Sprite):
         self.frame = 0
         self.last_animation = pygame.time.get_ticks()
         self.animation_list = self.load_animation_list()
-        self.random_cooldown = random.randint(constants.ANIMATION_MIN_TIME, constants.ANIMATION_MAX_TIME)
         self.actual_list = self.animation_list[1][1]
         self.animation_time = True
+        self.random_cooldown = 0
 
 
     def draw(self, screen):
         screen.blit(pygame.transform.flip(self.img, self.flip, False), self.rect)
-        pygame.draw.rect(screen, (255, 0, 0), self.rect, 2)
-        pygame.draw.rect(screen, (0, 255, 0), self.rect, 2)
 
     def move(self, obstacle_list, screen_scroll):
         self.now = pygame.time.get_ticks()
 
-        if self.now - self.last_move > random.randint(constants.ANIMATION_MIN_TIME, constants.ANIMATION_MAX_TIME):
+        if self.now - self.last_move > self.random_cooldown:
             self.last_move = pygame.time.get_ticks()
 
             random_move = random.randint(0, 10)
             if self.is_dead:
                 self.movement = False
             else:
-                self.movement = random_move == 0
+                self.movement = random_move > 0
 
             self.direction = pygame.Vector2(0, 0)
-            if random.randint(0, 1):
-                self.direction.x = random.choice([-1, 1])
-                if self.direction.x == -1:
-                    self.flip = True
-                elif self.direction.x == 1:
-                    self.flip = False
-            if random.randint(0, 1):
-                self.direction.y = random.choice([-1, 1])
+            self.direction.x = random.randint(-1, 1)
+            self.direction.y = random.randint(-1, 1)
+            if self.direction.x == -1:
+                self.flip = True
+            elif self.direction.x == 1:
+                self.flip = False
+            if self.direction.x == 0 and self.direction.y == 0:
+                self.movement = False
+
+            self.random_cooldown = random.randint(constants.ANIMATION_MIN_TIME, constants.ANIMATION_MAX_TIME)
 
         if self.movement:
+            
             prev_x = self.x
             prev_y = self.y
 
@@ -292,6 +293,7 @@ class Npc(Character, pygame.sprite.Sprite):
                 if self.in_collision(tile):
                     self.y = prev_y
                     self.rect.centery = int(self.y)
+                    self.movement = False
 
             if self.direction.length_squared() > 0:
                 self.direction = self.direction.normalize()
@@ -305,7 +307,7 @@ class Npc(Character, pygame.sprite.Sprite):
         self.move(obstacles, screen_scroll)
         self.get_animation(sound_list)
         now = pygame.time.get_ticks()
-        if self.movement:
+        if self.movement and self.direction.length_squared() > 0:
             if now - self.last_animation > 150:    
                 self.last_animation = pygame.time.get_ticks()
                 if self.frame >= len(self.walk):
@@ -377,7 +379,7 @@ class Npc(Character, pygame.sprite.Sprite):
         index = -1
 
         if self.animation_time:
-            a = random.randint(0, 10)
+            a = random.randint(0, 6)
             index = 0
             if self.infected and a > constants.INFECTED_COEFICIENT:
                 index = random.randint(0, len(self.animation_list[0]) - 1)
