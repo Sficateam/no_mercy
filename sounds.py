@@ -11,7 +11,6 @@ class Sound():
         self.loose = pygame.mixer.Sound("assets/audio/endings/you_loose.wav")
         self.escape = pygame.mixer.Sound("assets/audio/endings/they_escape.mp3")
         self.eating = pygame.mixer.Sound(f"assets/audio/eating/eating.mp3")
-        self.happy = []
         self.cough = []
         self.dying = []
         self.time = pygame.time.get_ticks()

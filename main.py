@@ -1,6 +1,7 @@
 import pygame
 from pygame import mixer
 import character
+from character import Npc
 from world import World
 import constants
 from game import Game
@@ -59,6 +60,9 @@ while running:
 		font = pygame.font.Font(None, 36)
 		time_display_text = font.render(f'Time: {abs(elapsed_time_seconds - constants.TIME_LIMIT_SECONDS)} s', True, (255, 255, 255))
 		game.screen.blit(time_display_text, (0, 0))
+
+		eliminated_text = font.render(f'Eliminated: {character.Npc.count_infected} / {constants.NUMBER_OF_INFECTED_NPC * 2}', True, (255, 255, 255))
+		game.screen.blit(eliminated_text, (constants.SCREEN_WIDTH - 200, 0))
 
 		if game.npc_count(constants.NUMBER_OF_INFECTED_NPC)[0] == 1:
 			now = pygame.time.get_ticks()
