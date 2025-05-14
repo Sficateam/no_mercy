@@ -204,15 +204,22 @@ class Player(Character, pygame.sprite.Sprite):
     def attack(self, npc_group, sound):
         for npc in npc_group:
             if self.attacking and self.in_collision(npc.rect):
-                self.last_attack = pygame.time.get_ticks()
-                sound.play()
-                if npc.infected and not npc.is_dead:
-                    Npc.count_infected += 1
-                elif not npc.infected and not npc.is_dead:
-                    Npc.count_innocent += 1           
-                npc.is_dead = True
-                
-
+                if not self.flip and self.rect.right > npc.rect.left and self.rect.centerx < npc.rect.centerx:
+                    self.last_attack = pygame.time.get_ticks()
+                    sound.play()
+                    if npc.infected and not npc.is_dead:
+                        Npc.count_infected += 1
+                    elif not npc.infected and not npc.is_dead:
+                        Npc.count_innocent += 1           
+                    npc.is_dead = True
+                if self.flip and self.rect.left < npc.rect.right and self.rect.centerx > npc.rect.centerx:
+                    self.last_attack = pygame.time.get_ticks()
+                    sound.play()
+                    if npc.infected and not npc.is_dead:
+                        Npc.count_infected += 1
+                    elif not npc.infected and not npc.is_dead:
+                        Npc.count_innocent += 1           
+                    npc.is_dead = True
 
 class Npc(Character, pygame.sprite.Sprite):
 
