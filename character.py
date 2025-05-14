@@ -292,7 +292,7 @@ class Npc(Character, pygame.sprite.Sprite):
             self.direction = self.direction.normalize()
 
 
-    def update(self, obstacles, screen_scroll, sound_list, death_sound_list):
+    def update(self, obstacles, screen_scroll, death_sound_list):
         if self.is_dead:
             self.do_animation_once(self.death, constants.DEATH_COOLDOWN)
             self.flip = False
@@ -301,8 +301,8 @@ class Npc(Character, pygame.sprite.Sprite):
                 threading.Timer(0.3, sound.play).start()
                 self.death_sound_unplayed = False
         else:
-            k = random.randint(0, 50)
-            if k > 0:
+            k = random.random()
+            if k < constants.MOVE_COEFICIENT:
                 self.move(obstacles)
                 if self.direction.x == 0:
                     self.flip = False
@@ -315,7 +315,7 @@ class Npc(Character, pygame.sprite.Sprite):
                         self.img = self.walk_animation_list[self.frame]
                         self.frame += 1
             else:
-                self.get_animation(sound_list)
+                self.get_animation()
 
 
 
@@ -357,26 +357,18 @@ class Npc(Character, pygame.sprite.Sprite):
         return animation_list
 
         
-    def get_animation(self, sound_list):
+    def get_animation(self):
 
         index = -1
 
-        a = random.randint(0, 4)
+        a = random.random()
         index = 0
-        if self.infected and a < 4:
+        if self.infected and a < constants.INCECTED_ANIMATION_COEFICIENT:
             index = random.randint(0, len(self.animation_list[0]) - 1)
             self.actual_list = self.animation_list[0][index]
         else:
             index = random.randint(0, len(self.animation_list[1]) - 1)
             self.actual_list = self.animation_list[1][index]
-
-
-        if len(sound_list[index+1]) > 0 and pygame.time.get_ticks() - self.last_sound > constants.NPC_SOUND_COOLDOWN:
-            self.last_sound = pygame.time.get_ticks()
-            if index == 1 or index == 2:
-                random_i = random.randint(0, len(sound_list[index]) - 1)
-                sound = sound_list[index][random_i]
-                sound.play()
 
         now = pygame.time.get_ticks()
         if now - self.last_animation > 200:

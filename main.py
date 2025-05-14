@@ -11,8 +11,6 @@ pygame.init()
 game = Game()
 game.setup()
 
-game.sounds.play_backround()
-
 running = True
 game_state = 'start-komix'
 
@@ -45,12 +43,15 @@ while running:
 		game.world1.draw(game.surface)
 
 		for npc in game.npc_group:
-			npc.update(game.world1.obstacles, screen_scroll, game.sounds.sound_list, game.sounds.dying)
+			npc.update(game.world1.obstacles, screen_scroll, game.sounds.dying)
 			npc.draw(game.surface)
 
 		game.hero.draw(game.surface)
 		
 		game.hero.attack(game.npc_group, game.sounds.attack)
+
+		game.sounds.play_cough_sounds()
+		game.sounds.play_eat_sound()
 
 		elapsed_time = (pygame.time.get_ticks() - game.game_time)
 		elapsed_time_seconds = elapsed_time // 1000
@@ -80,19 +81,22 @@ while running:
 			if event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_KP_ENTER or event.key == pygame.K_RETURN:
 					game_state = 'start-komix'
-					game.setup()					
+					game.sounds.stop_music()					
+					game.setup()
+					game.sounds.unplayed = True
+		
 										
 		if game_state == 'win':
 			game.screen.blit(pygame.image.load(f'assets/bg/Ending-win.png').convert_alpha(), (0, 0))
-			game.sounds.play_sound(game.sounds.win)
+			game.sounds.play_final_sound(game.sounds.win)
 		if game_state == 'loose':
 			game.screen.blit(pygame.image.load(f'assets/bg/Kill-innocent.png').convert_alpha(), (0, 0))
 			game.draw_subtitles('GAME OVER')
-			game.sounds.play_sound(game.sounds.loose)
+			game.sounds.play_final_sound(game.sounds.loose)
 		if game_state == 'time-up':
 			game.screen.blit(pygame.image.load(f'assets/bg/Time-over.png').convert_alpha(), (0, 0))
 			game.draw_subtitles('GAME OVER')
-			game.sounds.play_sound(game.sounds.escape)
+			game.sounds.play_final_sound(game.sounds.escape)
 	game.clock.tick(constants.FPS) 
 	pygame.display.flip()
 
