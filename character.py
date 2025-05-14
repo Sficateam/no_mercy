@@ -241,6 +241,7 @@ class Npc(Character, pygame.sprite.Sprite):
         self.animation_list = self.load_animation_list()
         self.actual_list = self.animation_list[1][1]
         self.random_cooldown = 0
+        self.last_sound = pygame.time.get_ticks()
 
 
     def draw(self, screen):
@@ -322,20 +323,11 @@ class Npc(Character, pygame.sprite.Sprite):
         self.y += screen_scroll[1]
         self.rect.center = (int(self.x), int(self.y))
 
-    def get_postion(self, position_list):
-        i = random.randint(0, len(position_list) - 1)
-        return position_list[i]
     
     def get_random_rect(self, position_list):
         index = random.randint(0, len(position_list) - 1)
         return position_list[index].copy()
     
-    def get_virus(self):
-        i = random.randint(0, 1)
-        if i == 0:
-            return True
-        else:
-            return False
         
     def death_animation_load(self):
         if self.infected:
@@ -379,7 +371,8 @@ class Npc(Character, pygame.sprite.Sprite):
             self.actual_list = self.animation_list[1][index]
 
 
-        if len(sound_list[index+1]) > 0:
+        if len(sound_list[index+1]) > 0 and pygame.time.get_ticks() - self.last_sound > constants.NPC_SOUND_COOLDOWN:
+            self.last_sound = pygame.time.get_ticks()
             if index == 1 or index == 2:
                 random_i = random.randint(0, len(sound_list[index]) - 1)
                 sound = sound_list[index][random_i]
