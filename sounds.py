@@ -11,6 +11,7 @@ class Sound():
         self.loose = pygame.mixer.Sound("assets/audio/endings/you_loose.wav")
         self.escape = pygame.mixer.Sound("assets/audio/endings/they_escape.mp3")
         self.eating = pygame.mixer.Sound(f"assets/audio/eating/eating.mp3")
+        self.happy = []
         self.cough = []
         self.dying = []
         self.time = pygame.time.get_ticks()
@@ -22,6 +23,9 @@ class Sound():
         self.channel_eating = pygame.mixer.Channel(1)
         self.channel_cough = pygame.mixer.Channel(2)
         self.channel_attack = pygame.mixer.Channel(3)
+        self.channel_win = pygame.mixer.Channel(5)
+        self.channel_loose = pygame.mixer.Channel(5)
+        self.channel_esc = pygame.mixer.Channel(5)
         self.mixer = pygame.mixer.init()        
 
     def process_data(self):
@@ -59,7 +63,7 @@ class Sound():
         self.annouc_cooldown = constants.ANOUC_COOLDOWN
 
     def play_final_sound(self, sound):
-        if self.unplayed:
+        if self.unplayed and not self.channel_win.get_busy():
             sound.play()
             self.unplayed = False
 
