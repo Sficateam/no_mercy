@@ -4,6 +4,7 @@ import constants
 import random
 import os
 import threading
+import math
 
 class Character(ABC):
     def __init__(self, speed):
@@ -203,8 +204,9 @@ class Player(Character, pygame.sprite.Sprite):
     
     def attack(self, npc_group, sound):
         for npc in npc_group:
-            if self.attacking and self.in_collision(npc.rect):
-                if not self.flip and self.rect.right > npc.rect.left and self.rect.centerx < npc.rect.centerx:
+            dist = math.sqrt(((self.rect.centerx - npc.rect.centerx) ** 2) + ((self.rect.centery - npc.rect.centery) ** 2))
+            if self.attacking and self.in_collision(npc.rect) and dist < 80:
+                if True:
                     self.last_attack = pygame.time.get_ticks()
                     sound.play()
                     if npc.infected and not npc.is_dead:
